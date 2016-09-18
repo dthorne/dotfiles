@@ -15,8 +15,8 @@ export PATH="/Users/deweymcneill/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f $HOME/dotfiles/bash_aliases ]; then
+    . $HOME/dotfiles/bash_aliases
 fi
 
 . ~/.nvm/nvm.sh

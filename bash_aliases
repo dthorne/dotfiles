@@ -1,0 +1,7 @@
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias ws='wstorm .'
+alias code='code-insiders'
+alias npmi='rm -R node_modules;npm install'
+alias run='heroku local'

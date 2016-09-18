@@ -1,1 +1,0 @@
-/Users/deweymcneill/dotfiles/bashrc
