@@ -5,6 +5,8 @@ export ZSH=/Users/deweymcneill/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
+#autoload -U promptinit; promptinit
+#prompt pure
 ZSH_THEME="pure"
 
 plugins=(git npm brew chucknorris compleat jira jsontools lol nyan web-search wd expand-aliases)
