@@ -27,6 +27,8 @@ fi
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+export SAUCE_USERNAME=dmcneill
+export SAUCE_ACCESS_KEY=2f3b6e44-4049-45e3-8820-8a8a58f41bac
 
 function mkalias () 
 { 

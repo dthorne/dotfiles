@@ -1,8 +1,8 @@
 execute pathogen#infect()
 execute pathogen#helptags()
 syntax enable 
+autocmd BufNewFile,BufRead *.json set ft=javascript
 set background=dark
-colorscheme solarized
 set number
 set t_Co=256
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab

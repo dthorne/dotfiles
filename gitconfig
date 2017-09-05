@@ -1,0 +1,30 @@
+[url "https://"]
+	insteadOf = git://
+[branch]
+	autosetuprebase = always
+[user]
+	email = dmcneill@familysearch.org
+	name = Dewey McNeill
+[core]
+	excludesfile = /Users/deweymcneill/.gitignore_global
+	editor = vim
+[push]
+	default = simple
+[pull]
+	rebase = true
+[rebase]
+	autostash = true
+[color]
+	ui = auto
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[alias]
+	dt = difftool
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
