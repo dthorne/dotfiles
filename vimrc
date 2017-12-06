@@ -1,5 +1,8 @@
-execute pathogen#infect()
-execute pathogen#helptags()
+call plug#begin('/Users/deweymcneill/.vim/plugged')
+Plug 'tpope/vim-surround'
+Plug 'kien/ctrlp.vim'
+call plug#end()
+
 syntax enable 
 autocmd BufNewFile,BufRead *.json set ft=javascript
 set background=dark

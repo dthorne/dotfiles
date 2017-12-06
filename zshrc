@@ -5,15 +5,14 @@ export ZSH=/Users/deweymcneill/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-#autoload -U promptinit; promptinit
-#prompt pure
+autoload -U promptinit; promptinit
+prompt pure
 ZSH_THEME="pure"
 
 plugins=(git npm brew chucknorris compleat jira jsontools lol nyan web-search wd expand-aliases)
 
 export PATH="/Users/deweymcneill/.nvm/v0.10.40/bin:/usr/local/heroku/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="/Users/deweymcneill/bin:$PATH"
-# export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -21,9 +20,9 @@ if [ -f $HOME/dotfiles/bash_aliases ]; then
     . $HOME/dotfiles/bash_aliases
 fi
 
-. ~/.nvm/nvm.sh
-
-. ~/.z.sh
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
