@@ -5,7 +5,10 @@ call plug#end()
 
 syntax enable 
 autocmd BufNewFile,BufRead *.json set ft=javascript
-set background=dark
+"set background=dark
+if &diff
+  colorscheme evening
+endif
 set number
 set t_Co=256
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab

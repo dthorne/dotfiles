@@ -11,7 +11,7 @@ ZSH_THEME="pure"
 
 plugins=(git npm brew chucknorris compleat jira jsontools lol nyan web-search wd expand-aliases)
 
-export PATH="/Users/deweymcneill/.nvm/v0.10.40/bin:/usr/local/heroku/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="/Users/deweymcneill/.nvm/v0.10.40/bin:/usr/local/heroku/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 export PATH="/Users/deweymcneill/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -40,3 +40,8 @@ myip() {ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ulimit -n 10000
+
+export PATH=/usr/local/Cellar/ruby/1.9.3-p194/bin:$PATH
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

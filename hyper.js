@@ -22,7 +22,7 @@ module.exports = {
     borderColor: '#333',
 
     // custom css to embed in the main window
-    css: '',
+    css: '.hyperline_line .partyparrot_wrapper, .hyperline_line .hostname_wrapper, .hyperline_line .ip_wrapper{display: none;} .hyperline_line .memory_wrapper{margin-left:-50px;}',
 
     // custom css to embed in the terminal window
     termCSS: '',
