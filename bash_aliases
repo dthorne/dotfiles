@@ -1,8 +1,0 @@
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias code='code-insiders'
-alias run='heroku local'
-alias c='code .'
-alias nuke='printf "Nuking build directories...\n";rm -rf components;rm -R bower_components;rm -R node_modules;printf "Nuked!\n"'
-alias foo='cd ~/fs'

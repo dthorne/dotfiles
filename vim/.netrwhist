@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/Users/deweymcneill/src/frontier-test/views'
-let g:netrw_dirhist_2='/Users/deweymcneill/src/home'
-let g:netrw_dirhist_3='/Users/deweymcneill/src/home/views'
-let g:netrw_dirhist_4='/Users/deweymcneill/src/home/views/pages'
-let g:netrw_dirhist_5='/Users/deweymcneill/fs/tree'
-let g:netrw_dirhist_6='/Users/deweymcneill/fs/tree/components'
-let g:netrw_dirhist_7='/Users/deweymcneill/fs/fs-labels'
