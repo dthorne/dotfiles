@@ -7,7 +7,7 @@
 	name = Dewey McNeill
 [core]
 	excludesfile = /Users/deweymcneill/.gitignore_global
-	editor = vim
+	editor = nvim
 [push]
 	default = simple
 [pull]
@@ -16,6 +16,15 @@
 	autostash = true
 [color]
 	ui = auto
+# define command which will be used when "nvim" is set as a merge tool
+[mergetool "nvim"]
+  cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+# set "nvim" as tool for merging
+[merge]
+  tool = nvim
+[mergetool]
+	prompt = false
+# automatically launch merge tool without displaying a prompt
 [diff]
 	tool = vimdiff
 [difftool]
@@ -23,10 +32,5 @@
 [alias]
 	dt = difftool
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-[merge]
-	tool = vimdiff
-	conflictstyle = diff3
-[mergetool]
-	prompt = false
 [url "https://github.com/"]
 	insteadOf = git://github.com/
