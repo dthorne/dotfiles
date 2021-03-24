@@ -10,10 +10,12 @@
 "
 let mapleader = ' '
 nnoremap <space> <nop>
-imap jj <esc>
+nnoremap <leader>v :e $MYVIMRC<CR>
+imap jj <esc>:w<CR>
 set nocompatible              " Eliminate vi backwards-compatability
 set numberwidth=4             " The width of the number column
 set number                    " Enable line numbers
+set mouse=a
 filetype plugin on            " required!
 filetype indent on            " required!
 syntax on                     " Syntax highlighting
@@ -41,7 +43,15 @@ noremap <C-S-t>   <C-w>v
 "inoremap <C-S-tab> <Esc>:tabprevious<CR>i
 "inoremap <C-tab>   <Esc>:tabnext<CR>i
 "inoremap <C-t>     <Esc>:tabnew<CR><F9>
-
+"Reloads vimrc after saving but keep cursor position
+if !exists('*ReloadVimrc')
+   fun! ReloadVimrc()
+     let save_cursor = getcurpos()
+     source $MYVIMRC
+     call setpos('.', save_cursor)
+   endfun
+ endif
+ autocmd! BufWritePost $MYVIMRC call ReloadVimrc()
 " ===================================================================
 " PLUGINS (vim-plug settings - Package Manager)
 " ===================================================================
@@ -77,6 +87,8 @@ if !exists('g:vscode')
     imap <C-x><C-l> <plug>(fzf-complete-line)
     Plug 'preservim/nerdtree' " nerdtree                  - File system browser (,e)
     map <C-p> :NERDTreeToggle<CR>
+    map <leader>r :NERDTreeFind<CR>
+    map <leader>p :NERDTreeFocus<CR>
     Plug 'Xuyuanp/nerdtree-git-plugin'
     " nerdtree-git-plugin 
      let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -104,6 +116,7 @@ endif
 " Git
 "
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 "
 " Commands
@@ -120,6 +133,7 @@ Plug 'tpope/vim-unimpaired'                 " unimpaired                - mappin
 
 Plug 'tpope/vim-abolish'                   " abolish                   - Change case (crs: snake_case, crm: MixedCase, crc: camelCase, cru: UPPER_CASE)
 Plug 'tpope/vim-surround'                  " surround                  - Add surround modifier to vim (s noun)
+Plug 'diepm/vim-rest-console'
 
 "
 " Code Completion
@@ -130,11 +144,15 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'pangloss/vim-javascript'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Quramy/tsuquyomi'
+Plug 'mattn/emmet-vim'
+
+
 
 let g:coc_global_extensions = [ 'coc-tsserver' ]
 
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
+Plug 'metakirby5/codi.vim'
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -205,8 +223,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename) 
 " Formatting selected code.
-xmap <leader>f <Plug>(coc-format-selected)
-nmap <leader>f <Plug>(coc-format-selected)
+xmap <leader>F <Plug>(coc-format-selected)
+nmap <leader>F <Plug>(coc-format-selected)
 
 " Remap keys for applying codeAction to the current buffer.
  nmap <leader>ac <Plug>(coc-codeaction)
