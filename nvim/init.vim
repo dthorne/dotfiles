@@ -31,6 +31,11 @@ silent !mkdir ~/.swap-files > /dev/null 2>&1
 set swapfile
 set dir=~/.swap-files
 
+" copy (write) highlighted text to .vimbuffer
+vmap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
+" paste from buffer
+map <leader><C-p> :r ~/.vimbuffer<CR>
+
 " Window navigation like Firefox.
 set splitbelow
 set splitright
@@ -237,6 +242,13 @@ nmap <leader>F <Plug>(coc-format-selected)
 Plug 'RRethy/vim-illuminate'                " illuminate                - hightlights other uses of word under cursor
 Plug 'vim-airline/vim-airline'              " airline                   - statusline replacement
 Plug 'vim-airline/vim-airline-themes'       " airline-themes            - additional airline themes
+let g:airline_powerline_fonts = 1
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline_stl_path_style = 'short'
+" remove the filetype part
+let g:airline_section_x=''
+" remove separators for empty sections
+let g:airline_skip_empty_sections = 1
 Plug 'flazz/vim-colorschemes'               " colorschemes              - a zillion colorschemes
 Plug 'jimsei/winresizer'                    " winresizer                - Window resizing (,w)
 Plug 'esneider/vim-simlight'                " simlight                  - Function and namespace highlighting
