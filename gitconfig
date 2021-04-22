@@ -1,21 +1,51 @@
-[url "https://"]
-	insteadOf = git://
-[branch]
-	autosetuprebase = always
 [user]
-	email = dmcneill@familysearch.org
-	name = Dewey McNeill
+  name = Dewey McNeill 
+  email = d.thorne@gmail.com 
+[alias]
+  st = status --short --branch
+  br = branch
+  initexternal = "!f() { git --work-tree=. --git-dir=\"$1\" init && echo \"gitdir: $1\" >> .git; }; f"
+  aa = add --all .
+  co = checkout
+  plog = log --pretty=oneline
+  oneline = log --pretty=oneline
+  wip = !git add --all && git commit -m 'WIP'
+  patch = !git aa && git commend
+  lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+  lg = !"git lg1"
+  please = push --force-with-lease
+  commend = commit --amend --no-edit
+  it = " !git init && git commit -m \"root #noissue\" --allow-empty"
+  stsh = stash --keep-index
+  staash = stash --include-untracked
+  staaash = stash --all
+  grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+  glog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+  rebase-common = !git rebase -i $(git merge-base HEAD $1)
+  freshen = commit --amend --no-edit --date=now
+  recent = branch --sort=committerdate
+  idiff = diff --cached
+  ff = merge --ff-only
+  mdifftool = difftool -y --diff-filter=M
+  prune = fetch --prune
+  soft-undo = reset --soft HEAD^
+  stash-all = stash save --include-untracked
+  do-merge = merge --ff
+  update = !sh -c 'git fetch origin $1:$1' -
+  clean-branches2 = !sh -c 'git branch | grep -v "master" | xargs git branch -d' -
+  clean-branches = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+  undo = "!f() { git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; }; f"
+  ignore = update-index --skip-worktree
+  unignore = update-index --no-skip-worktree
+  ignored = !git ls-files -v | grep "^S "
+  smu = submodule update --init --recursive
+  sync = "!f() { git checkout --quiet --detach && git fetch ${1-origin} ${2-master}:${2-master} && git checkout --quiet -; }; f"
+  urebase = "!f() { git worktree add ~/tmp-rebase-worktree $2 && cd ~/tmp-rebase-worktree && git rebase $1 $2 && cd - && rm -rf ~/tmp-rebase-worktree && git worktree prune; }; f"
 [core]
-	excludesfile = /Users/deweymcneill/.gitignore_global
-	editor = nvim
-[push]
-	default = simple
-[pull]
-	rebase = true
-[rebase]
-	autostash = true
-[color]
-	ui = auto
+  editor = nvim 
+  commentchar = !
+  autocrlf = true
 # define command which will be used when "nvim" is set as a merge tool
 [mergetool "nvim"]
   cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
@@ -23,14 +53,21 @@
 [merge]
   tool = nvim
 [mergetool]
-	prompt = false
+  prompt = false
 # automatically launch merge tool without displaying a prompt
 [diff]
-	tool = vimdiff
+  tool = vimdiff
+	colorMoved = zebra
 [difftool]
-	prompt = false
-[alias]
-	dt = difftool
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-[url "https://github.com/"]
-	insteadOf = git://github.com/
+ prompt = false
+[push]
+	default = current
+  followTags = true
+[status]
+  showUntrackedFiles = all
+[log]
+  decorate = full
+[pull]
+	rebase = true
+[fetch]
+	prune = true

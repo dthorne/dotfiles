@@ -26,6 +26,10 @@ set tabstop=2
 set softtabstop=2
 " when indenting with '>', use 2 spaces width
 set shiftwidth=2
+set ignorecase
+set wildmenu
+set smartcase
+set lazyredraw
 
 silent !mkdir ~/.swap-files > /dev/null 2>&1
 set swapfile
@@ -35,6 +39,8 @@ set dir=~/.swap-files
 vmap <C-c> y:new ~/.vimbuffer<CR>VGp:x<CR> \| :!cat ~/.vimbuffer \| clip.exe <CR><CR>
 " paste from buffer
 map <leader><C-p> :r ~/.vimbuffer<CR>
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
 
 " Window navigation like Firefox.
 set splitbelow
@@ -87,6 +93,7 @@ if !exists('g:vscode')
     nnoremap <silent> <leader>? :History<CR>
     nnoremap <silent> <leader>gl :Commits<CR>
     nnoremap <silent> <leader>ga :BCommits<CR>
+    command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
     imap <C-x><C-f> <plug>(fzf-complete-file-ag)
     imap <C-x><C-l> <plug>(fzf-complete-line)
@@ -138,19 +145,37 @@ Plug 'tpope/vim-unimpaired'                 " unimpaired                - mappin
 
 Plug 'tpope/vim-abolish'                   " abolish                   - Change case (crs: snake_case, crm: MixedCase, crc: camelCase, cru: UPPER_CASE)
 Plug 'tpope/vim-surround'                  " surround                  - Add surround modifier to vim (s noun)
-Plug 'diepm/vim-rest-console'
 
 "
 " Code Completion
 "
+"Plug 'HerringtonDarkholme/yats'
+Plug 'alvan/vim-clostag'
+" ================================================================
+" vim-closetag
+" ================================================================
+" Update closetag to also work on js and html files, don't want ts since <> is used for type args
+let g:closetag_filenames='*.html,*.js,*.jsx,*.tsx'
+let g:closetag_regions = {
+    \ 'typescript': 'jsxRegion',
+    \ 'typescriptreact': 'jsxRegion,tsxRegion',
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'javascriptreact': 'jsxRegion',
+    \ }
+
 Plug 'leafgarland/typescript-vim'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'pangloss/vim-javascript'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Quramy/tsuquyomi'
+Plug 'mlaursen/vim-react-snippets'
 Plug 'mattn/emmet-vim'
+Plug 'SirVer/ultisnips'
 
+Plug 'mlaursen/vim-react-snippets'
+Plug 'mlaursen/rmd-vim-snippets'
 
 
 let g:coc_global_extensions = [ 'coc-tsserver' ]
@@ -158,6 +183,7 @@ let g:coc_global_extensions = [ 'coc-tsserver' ]
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
 Plug 'metakirby5/codi.vim'
+Plug 'diepm/vim-rest-console'
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -199,10 +225,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ?  coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-" Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> <C-n> <Plug>(coc-diagnostic-prev)
+nmap <silent> <C-m> <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -231,10 +256,30 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>F <Plug>(coc-format-selected)
 nmap <leader>F <Plug>(coc-format-selected)
 
-" Remap keys for applying codeAction to the current buffer.
- nmap <leader>ac <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
- nmap <leader>qf <Plug>(coc-fix-current)
+" fix-it -- show preview window of fixable things and choose fix
+nmap <silent>fi <Plug>(coc-codeaction)
+
+" fix eslint (also any other fixable things. Mostly used for React hook dependencies)
+nmap <silent>fe <Plug>(coc-fix-current)
+
+" fix eslint (all)
+nmap <silent>fE :<C-u>CocCommand eslint.executeAutofix<cr>
+
+" fix imports
+nmap <silent>fI :<C-u>CocCommand tsserver.organizeImports<cr>
+
+" Show all diagnostics.
+nnoremap <silent> <leader>d :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <leader>e :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <leader>c :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <leader>o :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <leader>s :<C-u>CocList -I symbols<cr>
+" Resume latest coc list.
+nnoremap <silent> <leader>r :<C-u>CocListResume<CR>
 "
 "
 " Look and feel
