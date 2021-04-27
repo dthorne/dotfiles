@@ -25,3 +25,21 @@ source $ZSH/oh-my-zsh.sh
 export FZF_DEFAULT_COMMAND='ag -g ""'
 
 export CHOKIDAR_USEPOLLING=true
+
+export $(dbus-launch)
+export LIBGL_ALWAYS_INDIRECT=1
+
+export WSL_HOST=$(tail -1 /etc/resolv.conf | cut -d' ' -f2)
+export DISPLAY=$WSL_HOST:0
+
+export ADB_SERVER_SOCKET=tcp:$WSL_HOST:5037
+
+
+export ANDROID_HOME=/home/dthorne/Android/Sdk
+export ANDROID_SDK_ROOT=/home/dthorne/Android
+export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+
+PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+PATH=$PATH:$ANDROID_HOME/bin
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64

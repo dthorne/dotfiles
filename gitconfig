@@ -45,7 +45,6 @@
 [core]
   editor = nvim 
   commentchar = !
-  autocrlf = true
 # define command which will be used when "nvim" is set as a merge tool
 [mergetool "nvim"]
   cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"

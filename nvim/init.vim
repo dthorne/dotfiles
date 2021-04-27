@@ -29,7 +29,6 @@ set shiftwidth=2
 set ignorecase
 set wildmenu
 set smartcase
-set lazyredraw
 
 silent !mkdir ~/.swap-files > /dev/null 2>&1
 set swapfile
@@ -135,7 +134,6 @@ Plug 'airblade/vim-gitgutter'
 "
 if !exists('g:vscode')
     Plug 'henrik/vim-indexed-search'            " indexed-search            - Show N out of M in searches
-    Plug 'terryma/vim-multiple-cursors'        " multiple-cursors          - Multiple cursors (next: Ctrl-N, prev: Ctrl-P, skip: Ctrl-X)
 endif
 Plug 'scrooloose/nerdcommenter'             " nerdcommenter             - comment/uncomment source lines
 
@@ -150,7 +148,7 @@ Plug 'tpope/vim-surround'                  " surround                  - Add sur
 " Code Completion
 "
 "Plug 'HerringtonDarkholme/yats'
-Plug 'alvan/vim-clostag'
+Plug 'alvan/vim-closetag'
 " ================================================================
 " vim-closetag
 " ================================================================
@@ -170,9 +168,10 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'pangloss/vim-javascript'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Quramy/tsuquyomi'
-Plug 'mlaursen/vim-react-snippets'
 Plug 'mattn/emmet-vim'
-Plug 'SirVer/ultisnips'
+"Plug 'SirVer/ultisnips'
+let g:UltiSnipsExpandSnippetOrJump='<c-space>'
+let g:UltiSnipsListSnippets='<leader><c-space>'
 
 Plug 'mlaursen/vim-react-snippets'
 Plug 'mlaursen/rmd-vim-snippets'
@@ -220,7 +219,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+"inoremap <silent><expr> <c-space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
@@ -271,7 +270,7 @@ nmap <silent>fI :<C-u>CocCommand tsserver.organizeImports<cr>
 " Show all diagnostics.
 nnoremap <silent> <leader>d :<C-u>CocList diagnostics<cr>
 " Manage extensions.
-nnoremap <silent> <leader>e :<C-u>CocList extensions<cr>
+"nnoremap <silent> <leader>e :<C-u>CocList extensions<cr>
 " Show commands.
 nnoremap <silent> <leader>c :<C-u>CocList commands<cr>
 " Find symbol of current document.
@@ -319,5 +318,5 @@ set shortmess+=F  " to get rid of the file name displayed in the command line ba
 
 if !exists('g:vscode')
     "autocmd FileType typescript JsPreTmpl html
-    autocmd FileType typescript syn clear foldBraces
+    "autocmd FileType typescript syn clear foldBraces
 endif
