@@ -98,7 +98,7 @@ if !exists('g:vscode')
     imap <C-x><C-l> <plug>(fzf-complete-line)
     Plug 'preservim/nerdtree' " nerdtree                  - File system browser (,e)
     map <C-p> :NERDTreeToggle<CR>
-    map <leader>r :NERDTreeFind<CR>
+    map <leader>P :NERDTreeFind<CR>
     map <leader>p :NERDTreeFocus<CR>
     Plug 'Xuyuanp/nerdtree-git-plugin'
     " nerdtree-git-plugin 
@@ -147,6 +147,9 @@ Plug 'tpope/vim-surround'                  " surround                  - Add sur
 "
 " Code Completion
 "
+"Plug 'heavenshell/vim-jsdoc', { 
+  "\ 'for': ['javascript', 'javascript.jsx','typescript', 'typescriptreact', 'typescript.tsx'], 
+  "\ 'do': 'make install'}
 "Plug 'HerringtonDarkholme/yats'
 Plug 'alvan/vim-closetag'
 " ================================================================
@@ -173,8 +176,8 @@ Plug 'mattn/emmet-vim'
 let g:UltiSnipsExpandSnippetOrJump='<c-space>'
 let g:UltiSnipsListSnippets='<leader><c-space>'
 
-Plug 'mlaursen/vim-react-snippets'
-Plug 'mlaursen/rmd-vim-snippets'
+"Plug 'mlaursen/vim-react-snippets'
+"Plug 'mlaursen/rmd-vim-snippets'
 
 
 let g:coc_global_extensions = [ 'coc-tsserver' ]
@@ -288,6 +291,8 @@ Plug 'vim-airline/vim-airline'              " airline                   - status
 Plug 'vim-airline/vim-airline-themes'       " airline-themes            - additional airline themes
 let g:airline_powerline_fonts = 1
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
+let g:airline#parts#ffenc#skip_expected_string='utf-8[dos]'
+let g:airline#extensions#hunks#enabled=0
 let g:airline_stl_path_style = 'short'
 " remove the filetype part
 let g:airline_section_x=''
@@ -300,7 +305,8 @@ Plug 'esneider/vim-simlight'                " simlight                  - Functi
 "
 " Vim Extensions
 "
-" Plug 'her/central.vim'                      " central.vim               - local backups
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
 
 "
 " TESTING      
@@ -319,4 +325,4 @@ set shortmess+=F  " to get rid of the file name displayed in the command line ba
 if !exists('g:vscode')
     "autocmd FileType typescript JsPreTmpl html
     "autocmd FileType typescript syn clear foldBraces
-endif
+end
