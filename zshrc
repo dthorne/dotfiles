@@ -21,6 +21,7 @@ source $ZSH/oh-my-zsh.sh
 export FZF_DEFAULT_COMMAND='ag -g ""'
 
 export CHOKIDAR_USEPOLLING=true
+<<<<<<< Updated upstream
 
 #export $(dbus-launch)
 #export LIBGL_ALWAYS_INDIRECT=1
@@ -42,3 +43,4 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 #alias emulator=/mnt/c/Users/dewey/AppData/Local/Android/Sdk/emulator/emulator.exe
 #alias adb=/mnt/c/Users/dewey/AppData/Local/Android/Sdk/platform-tools/adb.exe
+fpath=($fpath "/home/dewey/.zfunctions")
