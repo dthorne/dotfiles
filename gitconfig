@@ -53,6 +53,7 @@
   tool = nvim
 [mergetool]
   prompt = false
+  keepBackup = false
 # automatically launch merge tool without displaying a prompt
 [diff]
   tool = vimdiff

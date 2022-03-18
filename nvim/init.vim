@@ -11,13 +11,15 @@
 let mapleader = ' '
 nnoremap <space> <nop>
 nnoremap <leader>v :e $MYVIMRC<CR>
+nnoremap <leader>gq :q<CR>
+nnoremap <leader>ww :wa<CR>
 imap jj <esc>:w<CR>
 set nocompatible              " Eliminate vi backwards-compatability
 set numberwidth=4             " The width of the number column
 set number                    " Enable line numbers
 set mouse=a
-filetype plugin on            " required!
-filetype indent on            " required!
+filetype off
+filetype plugin indent on            " required!
 syntax on                     " Syntax highlighting
 " On pressing tab, insert 2 spaces
 set expandtab
@@ -48,12 +50,15 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-noremap <C-t>     <C-w>s 
-noremap <C-S-t>   <C-w>v
+noremap <C-t>     <C-w>v 
+noremap <C-s>   <C-w>s
 "inoremap <C-S-tab> <Esc>:tabprevious<CR>i
 "inoremap <C-tab>   <Esc>:tabnext<CR>i
 "inoremap <C-t>     <Esc>:tabnew<CR><F9>
 "Reloads vimrc after saving but keep cursor position
+"
+"
+vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 if !exists('*ReloadVimrc')
    fun! ReloadVimrc()
      let save_cursor = getcurpos()
@@ -62,6 +67,30 @@ if !exists('*ReloadVimrc')
    endfun
  endif
  autocmd! BufWritePost $MYVIMRC call ReloadVimrc()
+
+function! MakeSession()
+  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+  if (filewritable(b:sessiondir) != 2)
+    exe 'silent !mkdir -p ' b:sessiondir
+    redraw!
+  endif
+  let b:filename = b:sessiondir . '/session.vim'
+  exe "mksession! " . b:filename
+endfunction
+
+function! LoadSession()
+  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+  let b:sessionfile = b:sessiondir . "/session.vim"
+  if (filereadable(b:sessionfile))
+    exe 'source ' b:sessionfile
+  else
+    echo "No session loaded."
+  endif
+endfunction
+
+" Adding automatons for when entering or leaving Vim
+au VimEnter * nested :call LoadSession()
+au VimLeave * :call MakeSession()
 " ===================================================================
 " PLUGINS (vim-plug settings - Package Manager)
 " ===================================================================
@@ -120,13 +149,30 @@ if !exists('g:vscode')
     Plug 'pseewald/nerdtree-tagbar-combined'    " nerdtree-tagbar-combined  - Opens tagbar and NERDTree in one vertical split window
     Plug 'junegunn/vim-peekaboo'                " peekaboo                  - Shows the contents of the registers on a sidebar
     Plug 'kshenoy/vim-signature'                " signature                 - Show marks
-    Plug 'majutsushi/tagbar'                    " tagbar                    - Show tags list (vars, funcs, etc.) (,t)
+    Plug 'preservim/tagbar'                    " tagbar                    - Show tags list (vars, funcs, etc.) (,t)
 endif
 
 "
 " Git
 "
 Plug 'tpope/vim-fugitive'
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gc :Gcommit -v -q<CR>
+nnoremap <leader>ga :Gcommit --amend<CR>
+nnoremap <leader>gt :Gcommit -v -q %<CR>
+nnoremap <leader>gi :Git wip<CR>
+nnoremap <leader>gu :Git reset HEAD~1<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>ge :Gedit<CR>
+nnoremap <leader>gr :Gread<CR>
+nnoremap <leader>gw :Gwrite<CR><CR>
+nnoremap <leader>gl :silent! Glog<CR>
+nnoremap <leader>gp :Ggrep<Space>
+nnoremap <leader>gm :Gmove<Space>
+nnoremap <leader>gb :Git branch<Space>
+nnoremap <leader>go :Git checkout<Space>
+nnoremap <leader>gps :Dispatch! git push<CR>
+nnoremap <leader>gpl :Dispatch! git pull<CR>
 Plug 'airblade/vim-gitgutter'
 
 "
@@ -143,6 +189,7 @@ Plug 'tpope/vim-unimpaired'                 " unimpaired                - mappin
 
 Plug 'tpope/vim-abolish'                   " abolish                   - Change case (crs: snake_case, crm: MixedCase, crc: camelCase, cru: UPPER_CASE)
 Plug 'tpope/vim-surround'                  " surround                  - Add surround modifier to vim (s noun)
+Plug 'justinmk/vim-sneak'                   " sneak                     - sneak around
 
 "
 " Code Completion
@@ -151,7 +198,7 @@ Plug 'tpope/vim-surround'                  " surround                  - Add sur
   "\ 'for': ['javascript', 'javascript.jsx','typescript', 'typescriptreact', 'typescript.tsx'], 
   "\ 'do': 'make install'}
 "Plug 'HerringtonDarkholme/yats'
-Plug 'alvan/vim-closetag'
+"Plug 'alvan/vim-closetag'
 " ================================================================
 " vim-closetag
 " ================================================================
@@ -168,9 +215,10 @@ let g:closetag_regions = {
 Plug 'leafgarland/typescript-vim'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'pangloss/vim-javascript'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'Quramy/tsuquyomi'
+"Plug 'Quramy/tsuquyomi'
 Plug 'mattn/emmet-vim'
 "Plug 'SirVer/ultisnips'
 let g:UltiSnipsExpandSnippetOrJump='<c-space>'
@@ -178,14 +226,31 @@ let g:UltiSnipsListSnippets='<leader><c-space>'
 
 "Plug 'mlaursen/vim-react-snippets'
 "Plug 'mlaursen/rmd-vim-snippets'
+"
+Plug 'meain/vim-package-info', { 'do': 'npm install' }
 
 
-let g:coc_global_extensions = [ 'coc-tsserver' ]
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-styled-components',
+  \ ]
 
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
+
+Plug 'github/copilot.vim' 
+imap <silent><script><expr> <tab><tab> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 Plug 'metakirby5/codi.vim'
 Plug 'diepm/vim-rest-console'
+Plug 'vim-test/vim-test'
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -299,6 +364,7 @@ let g:airline_section_x=''
 " remove separators for empty sections
 let g:airline_skip_empty_sections = 1
 Plug 'flazz/vim-colorschemes'               " colorschemes              - a zillion colorschemes
+Plug 'codehearts/mascara-vim'
 Plug 'jimsei/winresizer'                    " winresizer                - Window resizing (,w)
 Plug 'esneider/vim-simlight'                " simlight                  - Function and namespace highlighting
 
@@ -322,7 +388,6 @@ set noswapfile
 set noshowmode  " to get rid of thing like --INSERT--
 set shortmess+=F  " to get rid of the file name displayed in the command line bar
 
-if !exists('g:vscode')
-    "autocmd FileType typescript JsPreTmpl html
-    "autocmd FileType typescript syn clear foldBraces
-end
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+hi jsxAttrib cterm=italic ctermfg=75
