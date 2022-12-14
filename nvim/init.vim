@@ -125,10 +125,12 @@ if !exists('g:vscode')
 
     imap <C-x><C-f> <plug>(fzf-complete-file-ag)
     imap <C-x><C-l> <plug>(fzf-complete-line)
+
     Plug 'preservim/nerdtree' " nerdtree                  - File system browser (,e)
     map <C-p> :NERDTreeToggle<CR>
     map <leader>P :NERDTreeFind<CR>
     map <leader>p :NERDTreeFocus<CR>
+    let NERDTreeShowHidden=1
     Plug 'Xuyuanp/nerdtree-git-plugin'
     " nerdtree-git-plugin 
      let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -156,6 +158,7 @@ endif
 " Git
 "
 Plug 'tpope/vim-fugitive'
+<<<<<<< HEAD
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>ga :Gcommit --amend<CR>
@@ -173,6 +176,10 @@ nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Dispatch! git push<CR>
 nnoremap <leader>gpl :Dispatch! git pull<CR>
+=======
+Plug 'cedarbaum/fugitive-azure-devops'
+let g:fugitive_azure_devops_baseurl="https://dev.azure.com"
+>>>>>>> Adds twilio cli to zshrc, adds copilot to nvim
 Plug 'airblade/vim-gitgutter'
 
 "
@@ -239,9 +246,12 @@ let g:coc_global_extensions = [
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
 
-Plug 'github/copilot.vim' 
+Plug 'github/copilot.vim'
 imap <silent><script><expr> <tab><tab> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
+nmap <silent> <M-k> <Plug>(copilot-previous)
+nmap <silent> <M-j> <Plug>(copilot-next)
+nmap <silent> <M-l> <Plug>(copilot-dismiss)
 
 Plug 'metakirby5/codi.vim'
 Plug 'diepm/vim-rest-console'
@@ -390,4 +400,10 @@ set shortmess+=F  " to get rid of the file name displayed in the command line ba
 
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-hi jsxAttrib cterm=italic ctermfg=75
+if !exists('g:vscode')
+    "autocmd FileType typescript JsPreTmpl html
+    "autocmd FileType typescript syn clear foldBraces
+end
+" Italics
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"

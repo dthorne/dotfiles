@@ -18,11 +18,9 @@ export NVM_DIR="$HOME/.nvm"
 source $ZSH/oh-my-zsh.sh
 
 # export FZF_DEFAULT_COMMAND='rg --files --follow --no-ignore-vcs --hidden -g "!{node_modules/*,.git/*}"'
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 
 export CHOKIDAR_USEPOLLING=true
-<<<<<<< Updated upstream
-
 #export $(dbus-launch)
 #export LIBGL_ALWAYS_INDIRECT=1
 
@@ -44,3 +42,7 @@ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 #alias emulator=/mnt/c/Users/dewey/AppData/Local/Android/Sdk/emulator/emulator.exe
 #alias adb=/mnt/c/Users/dewey/AppData/Local/Android/Sdk/platform-tools/adb.exe
 fpath=($fpath "/home/dewey/.zfunctions")
+eval 
+TWILIO_AC_ZSH_SETUP_PATH=/home/dewey/.twilio-cli/autocomplete/zsh_setup && test -f $TWILIO_AC_ZSH_SETUP_PATH && source $TWILIO_AC_ZSH_SETUP_PATH; # twilio autocomplete setup
+
+source <(kubectl completion zsh)
