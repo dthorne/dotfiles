@@ -246,7 +246,7 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'github/copilot.vim'
-imap <silent><script><expr> <tab><tab> copilot#Accept("\<CR>")
+imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
 nmap <silent> <M-k> <Plug>(copilot-previous)
 nmap <silent> <M-j> <Plug>(copilot-next)
@@ -287,20 +287,17 @@ else
 set signcolumn=yes
 endif
 
-"inoremap <silent><expr> <TAB>
-"\ pumvisible() ? "\<C-n>" :
-"\ <SID>check_back_space() ? "\<TAB>" :
-"\ coc#refresh()
+inoremap <silent><expr> <TAB>
+\ pumvisible() ? "\<C-n>" :
+\ <SID>check_back_space() ? "\<TAB>" :
+\ coc#refresh()
 
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : \<C-h>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : \<C-h>"
 
-"function! s:check_back_space() abort
-  "let col = col('.') - 1
-  "return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-
-" Use <c-space> to trigger completion.
-"inoremap <silent><expr> <c-space> coc#refresh()
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
