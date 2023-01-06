@@ -11,6 +11,7 @@
 let mapleader = ' '
 nnoremap <space> <nop>
 nnoremap <leader>v :e $MYVIMRC<CR>
+nnoremap <leader>z :e ~/.zshrc<CR>
 nnoremap <leader>gq :q<CR>
 nnoremap <leader>ww :wa<CR>
 imap jj <esc>:w<CR>
@@ -158,7 +159,6 @@ endif
 " Git
 "
 Plug 'tpope/vim-fugitive'
-<<<<<<< HEAD
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>ga :Gcommit --amend<CR>
@@ -176,10 +176,8 @@ nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gps :Dispatch! git push<CR>
 nnoremap <leader>gpl :Dispatch! git pull<CR>
-=======
 Plug 'cedarbaum/fugitive-azure-devops'
-let g:fugitive_azure_devops_baseurl="https://dev.azure.com"
->>>>>>> Adds twilio cli to zshrc, adds copilot to nvim
+
 Plug 'airblade/vim-gitgutter'
 
 "
@@ -204,7 +202,6 @@ Plug 'justinmk/vim-sneak'                   " sneak                     - sneak 
 "Plug 'heavenshell/vim-jsdoc', { 
   "\ 'for': ['javascript', 'javascript.jsx','typescript', 'typescriptreact', 'typescript.tsx'], 
   "\ 'do': 'make install'}
-"Plug 'HerringtonDarkholme/yats'
 "Plug 'alvan/vim-closetag'
 " ================================================================
 " vim-closetag
@@ -219,11 +216,13 @@ let g:closetag_regions = {
     \ 'javascriptreact': 'jsxRegion',
     \ }
 
-Plug 'leafgarland/typescript-vim'
-Plug 'Quramy/vim-js-pretty-template'
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'pangloss/vim-javascript'
+Plug 'HerringtonDarkholme/yats'
+"Plug 'leafgarland/typescript-vim'
+"Plug 'Quramy/vim-js-pretty-template'
+"Plug 'maxmellon/vim-jsx-pretty'
+"Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+"Plug 'peitalin/vim-jsx-typescript'
+"Plug 'pangloss/vim-javascript'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 "Plug 'Quramy/tsuquyomi'
 Plug 'mattn/emmet-vim'
@@ -262,6 +261,10 @@ nmap <silent> t<C-s> :TestSuite<CR>
 nmap <silent> t<C-l> :TestLast<CR>
 nmap <silent> t<C-g> :TestVisit<CR>
 
+" Coc-Jest commands
+nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
+
+
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -284,17 +287,17 @@ else
 set signcolumn=yes
 endif
 
-inoremap <silent><expr> <TAB>
-\ pumvisible() ? "\<C-n>" :
-\ <SID>check_back_space() ? "\<TAB>" :
-\ coc#refresh()
+"inoremap <silent><expr> <TAB>
+"\ pumvisible() ? "\<C-n>" :
+"\ <SID>check_back_space() ? "\<TAB>" :
+"\ coc#refresh()
 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : \<C-h>"
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : \<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
 
 " Use <c-space> to trigger completion.
 "inoremap <silent><expr> <c-space> coc#refresh()
@@ -393,17 +396,21 @@ Plug 'xolox/vim-session'
 call plug#end()
 
 colorscheme codedark
+highlight comment cterm=italic gui=italic
+highlight keyword cterm=italic gui=italic
+highlight identifier cterm=italic gui=italic
+highlight special cterm=italic gui=italic
+highlight type cterm=italic gui=italic
 set noswapfile
 
 set noshowmode  " to get rid of thing like --INSERT--
 set shortmess+=F  " to get rid of the file name displayed in the command line bar
 
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-if !exists('g:vscode')
-    "autocmd FileType typescript JsPreTmpl html
-    "autocmd FileType typescript syn clear foldBraces
-end
 " Italics
 let &t_ZH="\e[3m"
 let &t_ZR="\e[23m"
+set t_ZH=^[[3m
+set t_ZR=^[[23m
