@@ -128,7 +128,7 @@ if !exists('g:vscode')
     imap <C-x><C-l> <plug>(fzf-complete-line)
 
     Plug 'preservim/nerdtree' " nerdtree                  - File system browser (,e)
-    map <C-p> :NERDTreeToggle<CR>
+    map <C-p> :ToggleNERDTree<CR>
     map <leader>P :NERDTreeFind<CR>
     map <leader>p :NERDTreeFocus<CR>
     let NERDTreeShowHidden=1
@@ -149,10 +149,11 @@ if !exists('g:vscode')
     Plug 'ryanoasis/vim-devicons'
     autocmd StdinReadPre * let s:std_in=1
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-    Plug 'pseewald/nerdtree-tagbar-combined'    " nerdtree-tagbar-combined  - Opens tagbar and NERDTree in one vertical split window
     Plug 'junegunn/vim-peekaboo'                " peekaboo                  - Shows the contents of the registers on a sidebar
     Plug 'kshenoy/vim-signature'                " signature                 - Show marks
-    Plug 'preservim/tagbar'                    " tagbar                    - Show tags list (vars, funcs, etc.) (,t)
+    Plug 'liuchengxu/vista.vim'                 " vista                     - Code outline
+    "Plug 'preservim/tagbar'                    " tagbar                    - Show tags list (vars, funcs, etc.) (,t)
+    "Plug 'pseewald/nerdtree-tagbar-combined'    " nerdtree-tagbar-combined  - Opens tagbar and NERDTree in one vertical split window
 endif
 
 "
@@ -246,8 +247,8 @@ Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'github/copilot.vim'
-imap <silent><script><expr> <leader><tab> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
+imap <silent><script><expr> <c-space> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true 
 nmap <silent> <M-k> <Plug>(copilot-previous)
 nmap <silent> <M-j> <Plug>(copilot-next)
 nmap <silent> <M-l> <Plug>(copilot-dismiss)
@@ -287,6 +288,11 @@ else
 set signcolumn=yes
 endif
 
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 inoremap <silent><expr> <TAB>
 \ pumvisible() ? "\<C-n>" :
 \ <SID>check_back_space() ? "\<TAB>" :
@@ -294,10 +300,6 @@ inoremap <silent><expr> <TAB>
 
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : \<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
