@@ -31,6 +31,7 @@ antigen use oh-my-zsh
 antigen bundle git
 antigen bundle npm
 antigen bundle nvm
+antigen bundle kubectl
 antigen bundle compleat
 antigen bundle jira
 antigen bundle jsontools
@@ -45,6 +46,9 @@ antigen bundle Sparragus/zsh-auto-nvm-use
 antigen theme https://github.com/denysdovhan/spaceship-prompt spaceship
 
 antigen apply
+
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
 
 # custom fzf integrated actions
 function fn_cherry_pick() {

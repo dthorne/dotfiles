@@ -55,11 +55,12 @@
   prompt = false
   keepBackup = false
 # automatically launch merge tool without displaying a prompt
-[diff]
-  tool = vimdiff
-	colorMoved = zebra
 [difftool]
- prompt = false
+    prompt = true
+[diff]
+    tool = nvimdiff
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [push]
 	default = current
   followTags = true
