@@ -344,9 +344,6 @@ nmap <silent>fe <Plug>(coc-fix-current)
 " fix eslint (all)
 nmap <silent>fE :<C-u>CocCommand eslint.executeAutofix<cr>
 
-" fix imports
-nmap <silent>fI :<C-u>CocCommand tsserver.organizeImports<cr>
-
 " Show all diagnostics.
 nnoremap <silent> <leader>d :<C-u>CocList diagnostics<cr>
 " Manage extensions.
