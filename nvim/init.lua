@@ -211,6 +211,10 @@ return require('packer').startup(function(use)
   vim.api.nvim_set_keymap('n', '<leader>go', ':Git checkout<Space>', {noremap = true, silent = true})
   --nnoremap <leader>gpl :Dispatch! git pull<CR>
   vim.api.nvim_set_keymap('n', '<leader>gpl', ':Dispatch! git pull<CR>', {noremap = true, silent = true})
+
+  use { 'junkblocker/git-time-lapse' }
+
+
   use { 'cedarbaum/fugitive-azure-devops'}
 
   use { 'airblade/vim-gitgutter'}
@@ -254,6 +258,15 @@ return require('packer').startup(function(use)
   use { 'HerringtonDarkholme/yats'}
   use { 'Shougo/vimproc.vim', run = 'make'}
   use { 'mattn/emmet-vim'}
+  use { 'jasonwoodland/vim-html-indent' }
+  use {
+    "allaman/kustomize.nvim",
+    requires = "nvim-lua/plenary.nvim",
+    ft = "yaml",
+    config = function()
+      require('kustomize').setup()
+    end,
+  }
   --use { 'SirVer/ultisnips'
   --let g:UltiSnipsExpandSnippetOrJump='<c-space>'
   --let g:UltiSnipsListSnippets='<leader><c-space>'
@@ -393,7 +406,6 @@ return require('packer').startup(function(use)
 
   vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
   vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
 
   -- Make <CR> auto-select the first completion item and notify coc.nvim to
   -- format on enter, <cr> could be remapped by other vim plugin

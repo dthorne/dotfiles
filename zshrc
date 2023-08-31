@@ -9,7 +9,7 @@ export ANDROID_HOME=~/Android/Sdk/
 export ANDROID_SDK_ROOT=~/Android/Sdk/
 export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
 
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 export XDG_CONFIG_HOME=~/dotfiles
 
@@ -69,3 +69,11 @@ alias gco='fn_git_checkout'
 
 eval 
 TWILIO_AC_ZSH_SETUP_PATH=/home/dewey/.twilio-cli/autocomplete/zsh_setup && test -f $TWILIO_AC_ZSH_SETUP_PATH && source $TWILIO_AC_ZSH_SETUP_PATH; # twilio autocomplete setup
+
+# pnpm
+export PNPM_HOME="/home/dewey/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
