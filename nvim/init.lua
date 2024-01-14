@@ -28,7 +28,7 @@ vim.opt.number = true
 --set mouse=a
 vim.opt.mouse = 'a'
 --filetype off
-vim.cmd('filetype off')
+--vim.cmd('filetype off')
 --filetype plugin indent on           -- required!
 vim.cmd('filetype plugin indent on')
 --syntax on                     --Syntax highlighting
@@ -116,6 +116,31 @@ return require('packer').startup(function(use)
 	  'junegunn/fzf.vim',
 	  requires = { 'junegunn/fzf', run = ':call fzf#install()' }
 	}
+
+  use({
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    config = function()
+      require('treesj').setup({
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "enter", -- set to `false` to disable one of the mappings
+            node_incremental = "enter",
+            node_decremental = "backspace",
+          },
+        },
+      })
+    end,
+  })
+
+  use({
+    'Wansmer/treesj',
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('treesj').setup()
+    end,
+  })
 
 
   --
@@ -236,17 +261,7 @@ return require('packer').startup(function(use)
     config = function() require("leap").set_default_keymaps() end 
   }         -- leap.nvim                 - Jump to any character on the screen
 
-  --use { 'heavenshell/vim-jsdoc', { 
-    --"\ 'for': ['javascript', 'javascript.jsx','typescript', 'typescriptreact', 'typescript.tsx'], 
-    --"\ 'do': 'make install'}
-  --use { 'alvan/vim-closetag'
-  -- ================================================================
-  -- vim-closetag
-  -- ================================================================
-  -- Update closetag to also work on js and html files, don't want ts since <> is used for type args
-  --let g:closetag_filenames='*.html,*.js,*.jsx,*.tsx'
   vim.g.closetag_filenames = '*.html,*.js,*.jsx,*.tsx'
-  --let g:closetag_regions = {
   vim.g.closetag_regions = {
     typescript= 'jsxRegion',
     typescriptreact = 'jsxRegion,tsxRegion',
@@ -267,14 +282,6 @@ return require('packer').startup(function(use)
       require('kustomize').setup()
     end,
   }
-  --use { 'SirVer/ultisnips'
-  --let g:UltiSnipsExpandSnippetOrJump='<c-space>'
-  --let g:UltiSnipsListSnippets='<leader><c-space>'
-
-  --use { 'mlaursen/vim-react-snippets'
-  --use { 'mlaursen/rmd-vim-snippets'
-
-  --let g:coc_global_extensions = [
   vim.g.coc_global_extensions = {
     'coc-tsserver',
     'coc-eslint',
@@ -284,66 +291,54 @@ return require('packer').startup(function(use)
   use { 'neoclide/coc.nvim', branch = 'release'}
   use { 'antoinemadec/coc-fzf'}
 
-  use { 'github/copilot.vim' }
-  --imap <silent><script><expr> <c-space> copilot#Accept("\<CR>")
-  vim.api.nvim_set_keymap('i', '<c-space>', 'copilot#Accept("<CR>")', {expr = true, silent = true})
-  --let g:copilot_no_tab_map = v:true 
-  vim.g.copilot_no_tab_map = true
-  ----nmap <silent> <M-k> <Plug>(copilot-previous)
-  vim.api.nvim_set_keymap('n', '<M-k>', '<Plug>(copilot-previous)', {})
-  ----nmap <silent> <M-j> <Plug>(copilot-next)
-  vim.api.nvim_set_keymap('n', '<M-j>', '<Plug>(copilot-next)', {})
-  ----nmap <silent> <M-l> <Plug>(copilot-dismiss)
-  --use {
-    --"zbirenbaum/copilot.lua",
-    --cmd = "Copilot",
-    --event = "InsertEnter",
-    --config = function()
-      --require('copilot').setup({
-        --panel = {
-          --enabled = true,
-          --auto_refresh = false,
-          --keymap = {
-            --jump_prev = "[[",
-            --jump_next = "]]",
-            --accept = "<CR>",
-            --refresh = "gr",
-            --open = "<M-CR>"
-          --},
-          --layout = {
-            --position = "bottom", -- | top | left | right
-            --ratio = 0.4
-          --},
-        --},
-        --suggestion = {
-          --enabled = true,
-          --auto_trigger = true,
-          --debounce = 75,
-          --keymap = {
-            --accept = "<M-l>",
-            --accept_word = false,
-            --accept_line = false,
-            --next = "<M-j>",
-            --prev = "<M-k>",
-            --dismiss = "<C-m>",
-          --},
-        --},
-        --filetypes = {
-          --yaml = false,
-          --markdown = false,
-          --help = false,
-          --gitcommit = false,
-          --gitrebase = false,
-          --hgcommit = false,
-          --svn = false,
-          --cvs = false,
-          --["."] = false,
-        --},
-        --copilot_node_command = 'node', -- Node.js version must be > 16.x
-        --server_opts_overrides = {},
-      --})
-    --end,
-  --}
+  use {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require('copilot').setup({
+        panel = {
+          enabled = true,
+          auto_refresh = false,
+          keymap = {
+            jump_prev = "[[",
+            jump_next = "]]",
+            accept = "<CR>",
+            refresh = "gr",
+            open = "<M-CR>"
+          },
+          layout = {
+            position = "bottom", -- | top | left | right
+            ratio = 0.4
+          },
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<C-space>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-j>",
+            prev = "<M-k>",
+            dismiss = "<C-m>",
+          },
+        },
+        filetypes = {
+          help = false,
+          gitcommit = false,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+          ["."] = false,
+        },
+        copilot_node_command = 'node', -- Node.js version must be > 16.x
+        server_opts_overrides = {},
+      })
+    end,
+  }
 
   use { 'metakirby5/codi.vim'}
   --Plug 'diepm/vim-rest-console'
@@ -414,6 +409,7 @@ return require('packer').startup(function(use)
   -- use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
   --nmap <silent> <C-n> <Plug>(coc-diagnostic-prev)
   --nmap <silent> <C-m> <Plug>(coc-diagnostic-next)
+  vim.api.nvim_set_keymap('n', '<C-n>', '<Plug>(coc-diagnostic-prev)', {})
 
   -- GoTo code navigation.
   --nmap <silent> gd <Plug>(coc-definition)
@@ -486,7 +482,7 @@ return require('packer').startup(function(use)
   vim.api.nvim_set_keymap('n', '<leader>o', ':<C-u>CocList outline<cr>', {noremap = true})
   -- Search workspace symbols.
   --nnoremap <silent> <leader>s :<C-u>CocList -I symbols<cr>
-  vim.api.nvim_set_keymap('n', '<leader>s', ':<C-u>CocList -I symbols<cr>', {noremap = true})
+  vim.api.nvim_set_keymap('n', '<leader>z', ':<C-u>CocList -I symbols<cr>', {noremap = true})
   -- Resume latest coc list.
   --nnoremap <silent> <leader>r :<C-u>CocListResume<CR>
   vim.api.nvim_set_keymap('n', '<leader>r', ':<C-u>CocListResume<CR>', {noremap = true})
@@ -505,7 +501,7 @@ return require('packer').startup(function(use)
   --let g:airline#extensions#hunks#enabled=0
   vim.g['airline#extensions#hunks#enabled']=0
   --let g:airline_stl_path_style = 'short'
-  vim.g.airline_stl_path_style = 'short'
+  vim.g.airline_stl_path_style = 'long'
   -- remove the filetype part
   --let g:airline_section_x=''
   vim.g.airline_section_x=''

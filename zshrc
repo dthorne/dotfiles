@@ -19,7 +19,8 @@ export NVM_LAZY_LOAD=true
 
 export PATH="$HOME/src/flutter/bin:$PATH"
 
-export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+#export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+export DISPLAY=$(grep -m 1 nameserver /etc/resolv.conf | awk '{print $2}'):0.0
 #export DISPLAY=localhost:0
 export LIBGL_ALWAYS_INDIRECT=1
 
@@ -39,6 +40,8 @@ antigen bundle web-search
 antigen bundle wd
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-history-substring-search ./zsh-history-substring-search.zsh
+
+antigen bundle kubectl
 
 antigen bundle lukechilds/zsh-nvm
 antigen bundle Sparragus/zsh-auto-nvm-use
@@ -62,7 +65,7 @@ function fn_cherry_pick() {
 alias gcp=fn_cherry_pick
 
 function fn_git_checkout() {
-    branch=$(git branch --all | fzf | sed "s/remotes\/origin\///" | xargs)
+    branch=$(git branch --all --sort=-committerdate | fzf | sed "s/remotes\/origin\///" | xargs)
     git checkout $branch
 }
 alias gco='fn_git_checkout'
@@ -77,3 +80,26 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+# 
+
+# custom commands
+#docker
+alias dockerstop="docker stop $(docker ps -a -q)"
+alias dockerkill="docker rm $(docker ps -a -q)"
+alias dockerstopkill="docker ps -aq | xargs docker rm -f"
+
+# k8s
+alias k="kubectl"
+alias kdev="kubectl --namespace dev"
+alias kprod="kubectl --namespace prod"
+alias kmon="kubectl --namespace monitoring"
+alias koutset="kubectl config use-context outset-aks"
+alias kb2b="kubectl config use-context aks-us-central"
+alias hdev="helm --namespace dev"
+alias hprod="Helm --namespace prod"
+alias kdevsecrets="kdev get secret keyvault-secrets -o json"
+alias kprodsecrets="kprod get secret keyvault-secrets -o json"
+alias kdevshared="kdev describe configmap shared-config"
+alias kprodshared="kprod describe configmap shared-config"
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)

@@ -89,10 +89,14 @@ _G.packer_plugins = {
     path = "/home/dewey/.local/share/nvim/site/pack/packer/start/codi.vim",
     url = "https://github.com/metakirby5/codi.vim"
   },
-  ["copilot.vim"] = {
-    loaded = true,
-    path = "/home/dewey/.local/share/nvim/site/pack/packer/start/copilot.vim",
-    url = "https://github.com/github/copilot.vim"
+  ["copilot.lua"] = {
+    commands = { "Copilot" },
+    config = { "\27LJ\2\2„\4\0\0\4\0\16\0\0216\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\b\0005\2\3\0005\3\4\0=\3\5\0025\3\6\0=\3\a\2=\2\t\0015\2\n\0005\3\v\0=\3\5\2=\2\f\0015\2\r\0=\2\14\0014\2\0\0=\2\15\1B\0\2\1K\0\1\0\26server_opts_overrides\14filetypes\1\0\t\rhgcommit\1\bcvs\1\bsvn\1\rmarkdown\1\tyaml\1\thelp\1\6.\1\14gitrebase\1\14gitcommit\1\15suggestion\1\0\6\16accept_line\1\tprev\n<M-k>\tnext\n<M-j>\vaccept\n<M-l>\16accept_word\1\fdismiss\n<C-m>\1\0\3\17auto_trigger\2\rdebounce\3K\fenabled\2\npanel\1\0\1\25copilot_node_command\tnode\vlayout\1\0\2\nratio\4š³æÌ\t™³æþ\3\rposition\vbottom\vkeymap\1\0\5\topen\v<M-CR>\14jump_prev\a[[\frefresh\agr\vaccept\t<CR>\14jump_next\a]]\1\0\2\17auto_refresh\1\fenabled\2\nsetup\fcopilot\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/home/dewey/.local/share/nvim/site/pack/packer/opt/copilot.lua",
+    url = "https://github.com/zbirenbaum/copilot.lua"
   },
   ["emmet-vim"] = {
     loaded = true,
@@ -120,7 +124,7 @@ _G.packer_plugins = {
     url = "https://github.com/junkblocker/git-time-lapse"
   },
   ["kustomize.nvim"] = {
-    config = { "\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14kustomize\frequire\0" },
+    config = { "\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14kustomize\frequire\0" },
     loaded = false,
     needs_bufread = false,
     only_cond = false,
@@ -128,7 +132,7 @@ _G.packer_plugins = {
     url = "https://github.com/allaman/kustomize.nvim"
   },
   ["leap.nvim"] = {
-    config = { "\27LJ\2\n@\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24set_default_keymaps\tleap\frequire\0" },
+    config = { "\27LJ\2\2@\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24set_default_keymaps\tleap\frequire\0" },
     loaded = true,
     path = "/home/dewey/.local/share/nvim/site/pack/packer/start/leap.nvim",
     url = "https://github.com/ggandor/leap.nvim"
@@ -153,6 +157,11 @@ _G.packer_plugins = {
     path = "/home/dewey/.local/share/nvim/site/pack/packer/start/nerdtree-git-plugin",
     url = "https://github.com/Xuyuanp/nerdtree-git-plugin"
   },
+  ["nvim-treesitter"] = {
+    loaded = true,
+    path = "/home/dewey/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter"
+  },
   ["packer.nvim"] = {
     loaded = true,
     path = "/home/dewey/.local/share/nvim/site/pack/packer/start/packer.nvim",
@@ -162,6 +171,12 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/dewey/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
+  },
+  treesj = {
+    config = { "\27LJ\2\0024\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vtreesj\frequire\0" },
+    loaded = true,
+    path = "/home/dewey/.local/share/nvim/site/pack/packer/start/treesj",
+    url = "https://github.com/Wansmer/treesj"
   },
   ["vim-abolish"] = {
     loaded = true,
@@ -281,16 +296,36 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: treesj
+time([[Config for treesj]], true)
+try_loadstring("\27LJ\2\0024\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\vtreesj\frequire\0", "config", "treesj")
+time([[Config for treesj]], false)
 -- Config for: leap.nvim
 time([[Config for leap.nvim]], true)
-try_loadstring("\27LJ\2\n@\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24set_default_keymaps\tleap\frequire\0", "config", "leap.nvim")
+try_loadstring("\27LJ\2\2@\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\24set_default_keymaps\tleap\frequire\0", "config", "leap.nvim")
 time([[Config for leap.nvim]], false)
+
+-- Command lazy-loads
+time([[Defining lazy-load commands]], true)
+pcall(vim.api.nvim_create_user_command, 'Copilot', function(cmdargs)
+          require('packer.load')({'copilot.lua'}, { cmd = 'Copilot', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
+        end,
+        {nargs = '*', range = true, bang = true, complete = function()
+          require('packer.load')({'copilot.lua'}, {}, _G.packer_plugins)
+          return vim.fn.getcompletion('Copilot ', 'cmdline')
+      end})
+time([[Defining lazy-load commands]], false)
+
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType yaml ++once lua require("packer.load")({'kustomize.nvim'}, { ft = "yaml" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
+  -- Event lazy-loads
+time([[Defining lazy-load event autocommands]], true)
+vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'copilot.lua'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
+time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 
 _G._packer.inside_compile = false
