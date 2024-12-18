@@ -3,91 +3,58 @@
 -- ===================================================================
 
 -- ===================================================================
--- Basic settings that need to be done early.
--- ===================================================================
---
 -- Key Mappings 
---
+-- ===================================================================
 vim.g.mapleader = ' '
---nnoremap <space> <nop>
 vim.api.nvim_set_keymap('n', '<space>', '<nop>', {noremap = true, silent = true})
---nnoremap <leader>v :e $MYVIMRC<CR>
-vim.api.nvim_set_keymap('n', '<leader>v', ':e $MYVIMRC<CR>', {noremap = true})
---nnoremap <leader>z :e ~/.zshrc<CR>
-vim.api.nvim_set_keymap('n', '<leader>z', ':e ~/.zshrc<CR>', {noremap = true})
---nnoremap <leader>gq :q<CR>
-vim.api.nvim_set_keymap('n', '<leader>gq', ':q<CR>', {noremap = true})
---nnoremap <leader>ww :wa<CR>
-vim.api.nvim_set_keymap('n', '<leader>ww', ':wa<CR>', {noremap = true})
---imap jj <esc>:w<CR>
+-- Esc on jj  
 vim.api.nvim_set_keymap('i', 'jj', '<esc>:w<CR>', {})
---set numberwidth=4            -- The width of the number column
-vim.opt.numberwidth = 4
---set number                   -- Enable line numbers
-vim.opt.number = true
---set mouse=a
-vim.opt.mouse = 'a'
---filetype off
---vim.cmd('filetype off')
---filetype plugin indent on           -- required!
-vim.cmd('filetype plugin indent on')
---syntax on                     --Syntax highlighting
-vim.cmd('syntax on')
--- On pressing tab, insert 2 spaces
---set expandtab
-vim.opt.expandtab = true
--- show existing tab with 2 spaces width
---set tabstop=2
-vim.opt.tabstop = 2
---set softtabstop=2
-vim.opt.softtabstop = 2
--- when indenting with '>', use 2 spaces width
---set shiftwidth=2
-vim.opt.shiftwidth = 2
---set ignorecase
-vim.opt.ignorecase = true
---set wildmenu
-vim.opt.wildmenu = true
---set smartcase
-vim.opt.smartcase = true
-
---silent !mkdir ~/.swap-files > /dev/null 2>&1
-vim.cmd('silent !mkdir ~/.swap-files > /dev/null 2>&1')
---set swapfile
-vim.opt.swapfile = true
---set dir=~/.swap-files
-vim.opt.dir = '~/.swap-files'
-
--- Disable highlight when <leader><cr> is pressed
---map <silent> <leader><cr> :noh<cr>
-vim.api.nvim_set_keymap('n', '<leader><cr>', ':noh<cr>', {noremap = true, silent = true})
+-- Stop search highlighting
+vim.api.nvim_set_keymap('n', '<leader>h', ':noh<cr>', {noremap = true, silent = true})
 -- Replace visual selection
---vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
 vim.api.nvim_set_keymap('v', '<C-r>', '"hy:%s/<C-r>h//g<left><left>', {noremap = true})
 
+-- Config management
+vim.api.nvim_create_user_command('Vimconfig', 'e $MYVIMRC', {bang = false})
+vim.api.nvim_create_user_command('Zshconfig', 'e ~/dotfiles/zshrc', {bang = false})
+
+--Reloads vimrc after saving but keep cursor position
+function ReloadVimrc()
+  local save_cursor = vim.fn.getcurpos()
+  vim.cmd('source $MYVIMRC')
+  vim.fn.setpos('.', save_cursor)
+end
+vim.api.nvim_create_user_command('ReloadVimrc', 'lua ReloadVimrc()', {bang = false})
+
+-- ===================================================================
+-- Editor settings
+-- ===================================================================
+vim.opt.numberwidth = 4
+vim.opt.number = true
+vim.opt.mouse = 'a'
+vim.cmd('filetype plugin indent on')
+vim.cmd('syntax on')
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.ignorecase = true
+vim.opt.wildmenu = true
+vim.opt.smartcase = true
+vim.cmd('silent !mkdir ~/.swap-files > /dev/null 2>&1')
+vim.opt.swapfile = true
+vim.opt.dir = '~/.swap-files'
 
 -- ===================================================================
 -- Window Management
 -- ===================================================================
---set splitbelow
 vim.opt.splitbelow = true
---set splitright
 vim.opt.splitright = true
---nnoremap <C-h> <C-w>h
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
---nnoremap <C-j> <C-w>j
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
---nnoremap <C-k> <C-w>k
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
---nnoremap <C-l> <C-w>l
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {noremap = true})
---Reloads vimrc after saving but keep cursor position
---function ReloadVimrc()
-  --local save_cursor = vim.fn.getcurpos()
-  --vim.cmd('source $MYVIMRC')
-  --vim.fn.setpos('.', save_cursor)
---end
---vim.cmd('autocmd! BufWritePost $MYVIMRC call ReloadVimrc()')
+
 
 -- ===================================================================
 -- PLUGINS (packer settings - Package Manager)
@@ -121,15 +88,15 @@ return require('packer').startup(function(use)
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require('treesj').setup({
+      require('nvim-treesitter.configs').setup({
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = "enter", -- set to `false` to disable one of the mappings
-            node_incremental = "enter",
-            node_decremental = "backspace",
-          },
+            init_selection = "<CR>", -- set to `false` to disable one of the mappings
+            node_incremental = "<CR>",
+            node_decremental = "<BS>",
         },
+      },
       })
     end,
   })
@@ -175,6 +142,30 @@ return require('packer').startup(function(use)
   --imap <C-x><C-l> <plug>(fzf-complete-line)
   vim.api.nvim_set_keymap('i', '<C-x><C-l>', '<plug>(fzf-complete-line)', {})
 
+  use { 
+    "luukvbaal/nnn.nvim",
+    config = function()
+      require('nnn').setup({
+        explorer = {
+          width = 30, 
+        },
+        windownav = {
+          left = '<C-h>',
+          down = '<C-j>',
+          up = '<C-k>',
+          right = '<C-l>',
+        }
+      })
+    end
+  }
+
+  vim.api.nvim_set_keymap('n', '<leader>n', ':NnnPicker<CR>', {noremap = true, silent = true})
+
+  use { 'ryanoasis/vim-devicons'}
+  vim.g.WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {
+    ['.*spec.*\\.ts$'] = 'ﬆ'
+  }
+
   use { 'preservim/nerdtree'} -- nerdtree                  - File system browser (,e)
   --map <C-p> :ToggleNERDTree<CR>
   vim.api.nvim_set_keymap('n', '<C-p>', ':NERDTreeToggle<CR>', {noremap = true, silent = true})
@@ -197,7 +188,6 @@ return require('packer').startup(function(use)
     Ignored   = '☒',
     Unknown   = "?"
   }
-  use { 'ryanoasis/vim-devicons'}
   --autocmd StdinReadPre * let s:std_in=1
   vim.cmd('autocmd StdinReadPre * let s:std_in=1')
   --autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -212,35 +202,23 @@ return require('packer').startup(function(use)
   -- Git
   --
   use { 'tpope/vim-fugitive'}
+  use { 'tpope/vim-rhubarb'}
   --nnoremap <leader>gs :Git<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gs', ':Git<CR>', {noremap = true, silent = true})
+  vim.api.nvim_set_keymap('n', '<leader>gs', ':Git ', {noremap = true, silent = true})
   --nnoremap <leader>gc :Gcommit -v -q<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gc', ':Gcommit -v -q<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>ga :Gcommit --amend<CR>
-  vim.api.nvim_set_keymap('n', '<leader>ga', ':Gcommit --amend<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gt :Gcommit -v -q %<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gt', ':Gcommit -v -q %<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gi :Git wip<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gi', ':Git wip<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gu :Git reset HEAD~1<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gu', ':Git reset HEAD~1<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gd :Gdiff<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gd', ':Gdiff<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gl :Glog<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gl', ':Glog<CR>', {noremap = true, silent = true})
-  --nnoremap <leader>gp :Ggrep<Space>
-  vim.api.nvim_set_keymap('n', '<leader>gp', ':Ggrep<Space>', {noremap = true, silent = true})
-  --nnoremap <leader>gb :Git branch<Space>
-  vim.api.nvim_set_keymap('n', '<leader>gb', ':Git branch<Space>', {noremap = true, silent = true})
-  --nnoremap <leader>go :Git checkout<Space>
-  vim.api.nvim_set_keymap('n', '<leader>go', ':Git checkout<Space>', {noremap = true, silent = true})
-  --nnoremap <leader>gpl :Dispatch! git pull<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gpl', ':Dispatch! git pull<CR>', {noremap = true, silent = true})
+
+  use({
+      "kdheepak/lazygit.nvim",
+      -- optional for floating window border decoration
+      requires = {
+          "nvim-lua/plenary.nvim",
+      },
+  })
+
+  vim.api.nvim_set_keymap('n', '<leader>gg', ':LazyGit<CR>', {noremap = true, silent = true})
+  
 
   use { 'junkblocker/git-time-lapse' }
-
-
-  use { 'cedarbaum/fugitive-azure-devops'}
 
   use { 'airblade/vim-gitgutter'}
 
@@ -340,6 +318,25 @@ return require('packer').startup(function(use)
     end,
   }
 
+  use {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'zbirenbaum/copilot.lua',
+    },
+    run = 'make tiktoken',
+    config = function()
+      require('CopilotChat').setup({
+        mappings = {
+
+        }
+      })
+    end,
+  }
+
+  vim.api.nvim_set_keymap('n', '<leader>ai', ':CopilotChatToggle<CR>', {noremap = true, silent = true})
+  vim.api.nvim_set_keymap('v', '<leader>ai', ':CopilotChatExplain<CR>', {noremap = true, silent = true})
+
   use { 'metakirby5/codi.vim'}
   --Plug 'diepm/vim-rest-console'
   --use { 'vim-test/vim-test'
@@ -409,6 +406,7 @@ return require('packer').startup(function(use)
   -- use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
   --nmap <silent> <C-n> <Plug>(coc-diagnostic-prev)
   --nmap <silent> <C-m> <Plug>(coc-diagnostic-next)
+  vim.api.nvim_set_keymap('n', '<C-m>', '<Plug>(coc-diagnostic-next)', {})
   vim.api.nvim_set_keymap('n', '<C-n>', '<Plug>(coc-diagnostic-prev)', {})
 
   -- GoTo code navigation.
@@ -490,26 +488,35 @@ return require('packer').startup(function(use)
   -- Look and feel
   -- ==============================================================================
   use { 'RRethy/vim-illuminate'             }  -- illuminate                - hightlights other uses of word under cursor
-  use { 'vim-airline/vim-airline'          }   -- airline                   - statusline replacement
-  use { 'vim-airline/vim-airline-themes' }     -- airline-themes            - additional airline themes
-  --let g:airline_powerline_fonts = 1
-  vim.g.airline_powerline_fonts = 1
-  --let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-  vim.g['airlineparts#ffenc#skip_expected_string']='utf-8[unix]'
-  --let g:airline#parts#ffenc#skip_expected_string='utf-8[dos]'
-  vim.g['airline#parts#ffenc#skip_expected_string']='utf-8[dos]'
-  --let g:airline#extensions#hunks#enabled=0
-  vim.g['airline#extensions#hunks#enabled']=0
-  --let g:airline_stl_path_style = 'short'
-  vim.g.airline_stl_path_style = 'long'
-  -- remove the filetype part
-  --let g:airline_section_x=''
-  vim.g.airline_section_x=''
+  use {
+    'nvim-lualine/lualine.nvim',
+    config = function ()
+      require('lualine').setup({
+        sections = {
+          lualine_b = {'branch'},
+          lualine_x = {},
+          lualine_y = {},
+        }
+      })
+    end,
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+      opt = true,
+    }
+  }
+
   -- remove separators for empty sections
   --let g:airline_skip_empty_sections = 1
-  vim.g.airline_skip_empty_sections = 1
+  --vim.g.airline_skip_empty_sections = 1
 
   use { 'flazz/vim-colorschemes' }             -- colorschemes              - a zillion colorschemes
+  use {
+    'daltonmenezes/aura-theme',
+    rtp = 'packages/neovim',
+    config = function()
+      vim.cmd("colorscheme aura-soft-dark") -- Or any Aura theme available
+    end
+  }
   use { 'codehearts/mascara-vim'}
   use { 'jimsei/winresizer'     }              -- winresizer                - Window resizing (,w)
   use { 'esneider/vim-simlight' }              -- simlight                  - Function and namespace highlighting
@@ -520,7 +527,7 @@ return require('packer').startup(function(use)
   use { 'xolox/vim-misc' }
   use { 'xolox/vim-session' }
 
-  vim.cmd('colorscheme codedark')
+  --vim.cmd('colorscheme codedark')
   vim.cmd('highlight comment cterm=italic gui=italic')
   vim.cmd('highlight keyword cterm=italic gui=italic')
   vim.cmd('highlight identifier cterm=italic gui=italic')

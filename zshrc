@@ -24,6 +24,9 @@ export DISPLAY=$(grep -m 1 nameserver /etc/resolv.conf | awk '{print $2}'):0.0
 #export DISPLAY=localhost:0
 export LIBGL_ALWAYS_INDIRECT=1
 
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+
 #antigen setup
 source $HOME/.oh-my-zsh/plugins/antigen.zsh
 
@@ -83,6 +86,8 @@ esac
 # 
 
 # custom commands
+alias gg="lazygit"
+
 #docker
 alias dockerstop="docker stop $(docker ps -a -q)"
 alias dockerkill="docker rm $(docker ps -a -q)"
@@ -102,4 +107,39 @@ alias kprodsecrets="kprod get secret keyvault-secrets -o json"
 alias kdevshared="kdev describe configmap shared-config"
 alias kprodshared="kprod describe configmap shared-config"
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
+n ()
+{
+    # Block nesting of nnn in subshells
+    [ "${NNNLVL:-0}" -eq 0 ] || {
+        echo "nnn is already running"
+        return
+    }
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+    # see. To cd on quit only on ^G, remove the "export" and make sure not to
+    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+    #      NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    # The command builtin allows one to alias nnn to n, if desired, without
+    # making an infinitely recursive alias
+    command nnn -e "$@"
+
+    [ ! -f "$NNN_TMPFILE" ] || {
+        . "$NNN_TMPFILE"
+        rm -f -- "$NNN_TMPFILE" > /dev/null
+    }
+}
+
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
