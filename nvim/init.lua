@@ -333,7 +333,7 @@ return require('packer').startup(function(use)
   -- ===================================================================
   -- Make <CR> auto-select the first completion item and notify coc.nvim to
   -- format on enter, <cr> could be remapped by other vim plugin
-  vim.api.nvim_set_keymap('i', '<cr>', 'pumvisible() ? coc#_select_confirm() : "<CR>"', {expr = true})
+  vim.api.nvim_set_keymap('i', '<cr>', 'pumvisible() ? coc#_select_confirm() : "<CR>"', {noremap = false, expr = true})
   -- use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
   vim.api.nvim_set_keymap('n', '<C-m>', '<Plug>(coc-diagnostic-next)', {})
   vim.api.nvim_set_keymap('n', '<C-n>', '<Plug>(coc-diagnostic-prev)', {})
