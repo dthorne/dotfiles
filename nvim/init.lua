@@ -76,14 +76,6 @@ local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  -- My plugins here
-  -- use 'foo1/bar1.nvim'
-  -- use 'foo2/bar2.nvim'
-	use {
-	  'junegunn/fzf.vim',
-	  requires = { 'junegunn/fzf', run = ':call fzf#install()' }
-	}
-
   use({
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
@@ -109,37 +101,25 @@ return require('packer').startup(function(use)
     end,
   })
 
+  -- ===================================================================
+  -- fzf setup
+  -- ===================================================================
+	use {
+	  'junegunn/fzf.vim',
+	  requires = { 'junegunn/fzf', run = ':call fzf#install()' }
+	}
 
-  --
-  -- UI Components
-  --let g:fzf_nvim_statusline = 0 -- disable statusline overwriting
   vim.g.fzf_nvim_statusline = 0
-  --nnoremap <silent> <leader><space> :Files<CR>
   vim.api.nvim_set_keymap('n', '<leader><space>', ':Files<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>f :Ag<CR>
   vim.api.nvim_set_keymap('n', '<leader>f', ':Ag<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>a :Buffers<CR>
   vim.api.nvim_set_keymap('n', '<leader>a', ':Buffers<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>A :Windows<CR>
   vim.api.nvim_set_keymap('n', '<leader>A', ':Windows<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>; :BLines<CR>
-  vim.api.nvim_set_keymap('n', '<leader>;', ':BLines<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>o :BTags<CR>
   vim.api.nvim_set_keymap('n', '<leader>o', ':BTags<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>O :Tags<CR>
   vim.api.nvim_set_keymap('n', '<leader>O', ':Tags<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>? :History<CR>
   vim.api.nvim_set_keymap('n', '<leader>?', ':History<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>gl :Commits<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gl', ':Commits<CR>', {noremap = true, silent = true})
-  --nnoremap <silent> <leader>ga :BCommits<CR>
-  vim.api.nvim_set_keymap('n', '<leader>gk', ':BCommits<CR>', {noremap = true, silent = true})
-  --command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {'options': '--delimiter : --nth 4..'}, <bang>0)
-  vim.cmd('command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, {\'options\': \'--delimiter : --nth 4..\'}), <bang>0')
+  --vim.api.nvim_create_user_command('Ag', 'call fzf#vim#ag(<q-args>, {\'options\': \'--delimiter : --nth 4..\'}), <bang>0', {bang = true, nargs = '*'})
 
-  --imap <C-x><C-f> <plug>(fzf-complete-file-ag)
   vim.api.nvim_set_keymap('i', '<C-x><C-f>', '<plug>(fzf-complete-file-ag)', {})
-  --imap <C-x><C-l> <plug>(fzf-complete-line)
   vim.api.nvim_set_keymap('i', '<C-x><C-l>', '<plug>(fzf-complete-line)', {})
 
   use { 
@@ -161,6 +141,10 @@ return require('packer').startup(function(use)
 
   vim.api.nvim_set_keymap('n', '<leader>n', ':NnnPicker<CR>', {noremap = true, silent = true})
 
+  -- ===================================================================
+  -- File Sidebar (NERDTree)
+  -- ===================================================================
+
   use { 'ryanoasis/vim-devicons'}
   vim.g.WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {
     ['.*spec.*\\.ts$'] = 'ﬆ'
@@ -174,8 +158,6 @@ return require('packer').startup(function(use)
   --let NERDTreeShowHidden=1
   vim.g.NERDTreeShowHidden = 1
   use { 'Xuyuanp/nerdtree-git-plugin'}
-  -- nerdtree-git-plugin 
-   --let g:NERDTreeGitStatusIndicatorMapCustom = {
   vim.g.NERDTreeGitStatusIndicatorMapCustom = {
     Modified  = "✹",
     Staged    = "✚",
@@ -188,12 +170,11 @@ return require('packer').startup(function(use)
     Ignored   = '☒',
     Unknown   = "?"
   }
-  --autocmd StdinReadPre * let s:std_in=1
-  vim.cmd('autocmd StdinReadPre * let s:std_in=1')
-  --autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-  vim.cmd('autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif')
+
   use { 'junegunn/vim-peekaboo'  }             -- peekaboo                  - Shows the contents of the registers on a sidebar
-  use { 'kshenoy/vim-signature' }              -- signature                 - Show marks
+  vim.g.peekaboo_window = 'vertical botright 50new'
+
+  use { 'kshenoy/vim-signature' }              -- signature                 - Show and navigate to marks m<letter> m<space> `]
   use { 'liuchengxu/vista.vim' }               -- vista                     - Code outline
   --use { 'preservim/tagbar'                   -- tagbar                    - Show tags list (vars, funcs, etc.) (,t)
   --use { 'pseewald/nerdtree-tagbar-combined'  -- nerdtree-tagbar-combined  - Opens tagbar and NERDTree in one vertical split window
@@ -201,11 +182,11 @@ return require('packer').startup(function(use)
   --
   -- Git
   --
-  use { 'tpope/vim-fugitive'}
-  use { 'tpope/vim-rhubarb'}
-  --nnoremap <leader>gs :Git<CR>
+  use { 'tpope/vim-fugitive'} -- fugitive                  - Git integration
+  use { 'tpope/vim-rhubarb'} -- rhubarb                   - Fugitive-companion to interact with github
+  use { 'junkblocker/git-time-lapse' } -- git-time-lapse             - Git time lapse
+  use { 'airblade/vim-gitgutter'}
   vim.api.nvim_set_keymap('n', '<leader>gs', ':Git ', {noremap = true, silent = true})
-  --nnoremap <leader>gc :Gcommit -v -q<CR>
 
   use({
       "kdheepak/lazygit.nvim",
@@ -216,11 +197,8 @@ return require('packer').startup(function(use)
   })
 
   vim.api.nvim_set_keymap('n', '<leader>gg', ':LazyGit<CR>', {noremap = true, silent = true})
-  
 
-  use { 'junkblocker/git-time-lapse' }
 
-  use { 'airblade/vim-gitgutter'}
 
   --
   -- Commands
@@ -248,27 +226,25 @@ return require('packer').startup(function(use)
     javascriptreact = 'jsxRegion',
   }
 
-  use { 'HerringtonDarkholme/yats'}
-  use { 'Shougo/vimproc.vim', run = 'make'}
-  use { 'mattn/emmet-vim'}
-  use { 'jasonwoodland/vim-html-indent' }
-  use {
-    "allaman/kustomize.nvim",
-    requires = "nvim-lua/plenary.nvim",
-    ft = "yaml",
-    config = function()
-      require('kustomize').setup()
-    end,
-  }
+  --use { 'HerringtonDarkholme/yats'}
+  use { 'Shougo/vimproc.vim', run = 'make' }
+  use { 'mattn/emmet-vim' }
+
+  -- ===================================================================
+  -- Language Server Protocol
+  -- ===================================================================
   vim.g.coc_global_extensions = {
     'coc-tsserver',
     'coc-eslint',
     'coc-styled-components',
   }
-
   use { 'neoclide/coc.nvim', branch = 'release'}
   use { 'antoinemadec/coc-fzf'}
 
+
+  -- ===================================================================
+  -- AI Tooling
+  -- ===================================================================
   use {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
@@ -337,75 +313,28 @@ return require('packer').startup(function(use)
   vim.api.nvim_set_keymap('n', '<leader>ai', ':CopilotChatToggle<CR>', {noremap = true, silent = true})
   vim.api.nvim_set_keymap('v', '<leader>ai', ':CopilotChatExplain<CR>', {noremap = true, silent = true})
 
-  use { 'metakirby5/codi.vim'}
-  --Plug 'diepm/vim-rest-console'
-  --use { 'vim-test/vim-test'
-  --nmap <silent> t<C-n> :TestNearest<CR>
-  --nmap <silent> t<C-f> :TestFile<CR>
-  --nmap <silent> t<C-s> :TestSuite<CR>
-  --nmap <silent> t<C-l> :TestLast<CR>
-  --nmap <silent> t<C-g> :TestVisit<CR>
-
-  -- Coc-Jest commands
-  --nnoremap <leader>te :call CocAction('runCommand', 'jest.singleTest')<CR>
+  -- ===================================================================
+  -- Misc Tools
+  -- ===================================================================
+  use { 'metakirby5/codi.vim' }
+  use { 'diepm/vim-rest-console' }
+  use { 'vim-test/vim-test' }
 
 
-  -- TextEdit might fail if hidden is not set.
-  --set hidden
-
-  -- Give more space for displaying messages.
-  --set cmdheight=3
+  -- ===================================================================
+  -- More NVIM settings
+  -- ===================================================================
   vim.o.cmdheight = 3
-
-  -- Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-  -- delays and poor user experience.
-  --set updatetime=300
   vim.o.updatetime = 300
-
-  -- Don't pass messages to |ins-completion-menu|.
-  --set shortmess+=c
-  --vim.o.shortmess = vim.o.shortmess .. 'c'
-
-  --set signcolumn=number
   vim.o.signcolumn = 'number'
 
-  local t = function(str)
-      return vim.api.nvim_replace_termcodes(str, true, true, true)
-  end
-
-  local check_back_space = function()
-      local col = vim.fn.col('.') - 1
-      return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-  end
-
-  _G.tab_complete = function()
-      if vim.fn.pumvisible() == 1 then
-          return t "<C-n>"
-      elseif check_back_space() then
-          return t "<Tab>"
-      else
-          vim.fn["coc#refresh"]()
-      end
-  end
-
-  _G.s_tab_complete = function()
-      if vim.fn.pumvisible() == 1 then
-          return t "<C-p>"
-      else
-          return t "<C-h>"
-      end
-  end
-
-  vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-  vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
+  -- ===================================================================
+  -- CoC tab completion
+  -- ===================================================================
   -- Make <CR> auto-select the first completion item and notify coc.nvim to
   -- format on enter, <cr> could be remapped by other vim plugin
-  --inoremap <silent><expr> <cr> pumvisible() ?  coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-  vim.api.nvim_set_keymap('i', '<cr>', 'pumvisible() ? coc#_select_confirm() : "<C-g>u<CR><c-r>=coc#on_enter()<CR>"', {expr = true})
+  vim.api.nvim_set_keymap('i', '<cr>', 'pumvisible() ? coc#_select_confirm() : "<CR>"', {expr = true})
   -- use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-  --nmap <silent> <C-n> <Plug>(coc-diagnostic-prev)
-  --nmap <silent> <C-m> <Plug>(coc-diagnostic-next)
   vim.api.nvim_set_keymap('n', '<C-m>', '<Plug>(coc-diagnostic-next)', {})
   vim.api.nvim_set_keymap('n', '<C-n>', '<Plug>(coc-diagnostic-prev)', {})
 
@@ -431,63 +360,35 @@ return require('packer').startup(function(use)
   end
   vim.api.nvim_set_keymap("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
 
-
-  --function!  s:show_documentation()
-    --if (index(['vim','help'], &filetype) >= 0)
-      --execute 'h '.expand('<cword>')
-    --elseif (coc#rpc#ready())
-      --call CocActionAsync('doHover')
-    --else
-     --execute '!' .  &keywordprg .  " .  expand('<cword>')
-   --endif
-  --endfunction
-
   -- Highlight the symbol and its references when holding the cursor.
   --autocmd CursorHold * silent call CocActionAsync('highlight')
   vim.cmd('autocmd CursorHold * silent call CocActionAsync("highlight")')
   -- Symbol renaming.
-  --nmap <leader>rn <Plug>(coc-rename) 
   vim.api.nvim_set_keymap('n', '<leader>rn', '<Plug>(coc-rename)', {})
   -- Formatting selected code.
-  --xmap <leader>F <Plug>(coc-format-selected)
   vim.api.nvim_set_keymap('x', '<leader>F', '<Plug>(coc-format-selected)', {})
-  --nmap <leader>F <Plug>(coc-format-selected)
   vim.api.nvim_set_keymap('n', '<leader>F', '<Plug>(coc-format-selected)', {})
-
   -- fix-it -- show preview window of fixable things and choose fix
-  --nmap <silent>fi <Plug>(coc-codeaction)
   vim.api.nvim_set_keymap('n', 'fi', '<Plug>(coc-codeaction)', {})
-
   -- fix eslint (also any other fixable things. Mostly used for React hook dependencies)
-  --nmap <silent>fe <Plug>(coc-fix-current)
   vim.api.nvim_set_keymap('n', 'fe', '<Plug>(coc-fix-current)', {})
-
   -- fix eslint (all)
-  --nmap <silent>fE :<C-u>CocCommand eslint.executeAutofix<cr>
   vim.api.nvim_set_keymap('n', 'fE', ':<C-u>CocCommand eslint.executeAutofix<cr>', {})
-
   -- Show all diagnostics.
-  --nnoremap <silent> <leader>d :<C-u>CocList diagnostics<cr>
   vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>CocList diagnostics<cr>', {noremap = true})
   -- Manage extensions.
-  --nnoremap <silent> <leader>e :<C-u>CocList extensions<cr>
   vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>CocList extensions<cr>', {noremap = true})
   -- Show commands.
-  --nnoremap <silent> <leader>c :<C-u>CocList commands<cr>
   vim.api.nvim_set_keymap('n', '<leader>c', ':<C-u>CocList commands<cr>', {noremap = true})
   -- Find symbol of current document.
-  --nnoremap <silent> <leader>o :<C-u>CocList outline<cr>
   vim.api.nvim_set_keymap('n', '<leader>o', ':<C-u>CocList outline<cr>', {noremap = true})
   -- Search workspace symbols.
-  --nnoremap <silent> <leader>s :<C-u>CocList -I symbols<cr>
   vim.api.nvim_set_keymap('n', '<leader>z', ':<C-u>CocList -I symbols<cr>', {noremap = true})
   -- Resume latest coc list.
-  --nnoremap <silent> <leader>r :<C-u>CocListResume<CR>
   vim.api.nvim_set_keymap('n', '<leader>r', ':<C-u>CocListResume<CR>', {noremap = true})
   -- ==============================================================================
   -- Look and feel
   -- ==============================================================================
-  use { 'RRethy/vim-illuminate'             }  -- illuminate                - hightlights other uses of word under cursor
   use {
     'nvim-lualine/lualine.nvim',
     config = function ()
@@ -505,10 +406,6 @@ return require('packer').startup(function(use)
     }
   }
 
-  -- remove separators for empty sections
-  --let g:airline_skip_empty_sections = 1
-  --vim.g.airline_skip_empty_sections = 1
-
   use { 'flazz/vim-colorschemes' }             -- colorschemes              - a zillion colorschemes
   use {
     'daltonmenezes/aura-theme',
@@ -517,7 +414,7 @@ return require('packer').startup(function(use)
       vim.cmd("colorscheme aura-soft-dark") -- Or any Aura theme available
     end
   }
-  use { 'codehearts/mascara-vim'}
+  use { 'codehearts/mascara-vim'}             -- mascara-vim               - Enable italics for Dank Mono
   use { 'jimsei/winresizer'     }              -- winresizer                - Window resizing (,w)
   use { 'esneider/vim-simlight' }              -- simlight                  - Function and namespace highlighting
 
