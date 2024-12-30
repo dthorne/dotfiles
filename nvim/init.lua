@@ -76,6 +76,21 @@ local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
+  use {
+    'williamboman/mason.nvim',
+    config = function()
+      require('mason').setup()
+    end
+  }
+  use {
+    'williamboman/mason-lspconfig.nvim',
+    config = function()
+      require('mason-lspconfig').setup({
+        ensure_installation = { "vtsls" },
+        automatic_installation = true
+      })
+    end
+  }
   use({
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
@@ -230,16 +245,146 @@ return require('packer').startup(function(use)
   use { 'Shougo/vimproc.vim', run = 'make' }
   use { 'mattn/emmet-vim' }
 
-  -- ===================================================================
-  -- Language Server Protocol
-  -- ===================================================================
-  vim.g.coc_global_extensions = {
-    'coc-tsserver',
-    'coc-eslint',
-    'coc-styled-components',
+  use { 'hrsh7th/cmp-nvim-lsp' }
+  use { 'hrsh7th/cmp-buffer' }
+  use { 'hrsh7th/cmp-path' }
+  use { 'hrsh7th/cmp-cmdline' }
+  use {
+    'hrsh7th/nvim-cmp',
+    after = { 'copilot-cmp' },
+    config = function() 
+      local cmp = require('cmp');
+      require('cmp').setup({
+        snippet = {
+          expand = function(args)
+            vim.snippet.expand(args.body)
+          end,
+        },
+        mapping = {
+          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<esc>'] = cmp.mapping.close({ select = false }),
+          ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+          ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          --['<Tab>'] = { -- see GH-880, GH-897
+            --i = function(fallback) -- see GH-231, GH-286
+              --if cmp.visible() then cmp.select_next_item()
+              --elseif has_words_before() then cmp.complete()
+              --else fallback() end
+            --end,
+          --},
+          --['<S-Tab>'] = {
+            --i = function(fallback)
+              --if cmp.visible() then cmp.select_prev_item()
+              --else fallback() end
+            --end,
+          --},
+        },
+        sources = {
+          { name = 'nvim_lsp' },
+          { name = 'buffer' },
+          { name = 'path' },
+          { name = 'copilot' },
+        },
+        formatting = {
+          format = function(entry, vim_item)
+            vim_item.menu = entry.source.name
+            return vim_item
+          end
+        },
+        sorting = {
+          priority_weight = 2,
+          comparators = {
+            require("copilot_cmp.comparators").prioritize,
+
+            -- Below is the default comparitor list and order for nvim-cmp
+            cmp.config.compare.offset,
+            -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+          },
+        },
+      })
+      -- `/` cmdline setup.
+      cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' }
+        }
+      })
+      -- `:` cmdline setup.
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          {
+            name = 'cmdline',
+            option = {
+              ignore_cmds = { 'Man', '!' }
+            }
+          }
+        })
+      })
+    end
   }
-  use { 'neoclide/coc.nvim', branch = 'release'}
-  use { 'antoinemadec/coc-fzf'}
+
+  -- ===================================================================
+  -- Language Server Protocol LSP
+  -- ===================================================================
+  use {
+    'neovim/nvim-lspconfig',
+    config = function()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local function on_attach(client, bufnr)
+        -- Set up buffer-local keymaps (vim.api.nvim_buf_set_keymap()), etc.
+        local opts = { noremap = true, silent = true }
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "v", "<C-k>", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>s", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "single" })<CR>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "single" })<CR>', opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
+        vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+      end
+      --require('lspconfig').angularls.setup{}
+      require('lspconfig').vtsls.setup({
+        capabilities = capabilities,
+        on_attach = on_attach
+      })
+      --require('lspconfig').eslint.setup({
+        --on_attach
+      --})
+    end
+  }
+
+  --use {
+    --"pmizio/typescript-tools.nvim",
+    --requires = {
+      --"nvim-lua/plenary.nvim",
+      --"neovim/nvim-lspconfig",
+    --},
+    --config = function()
+      --require("typescript-tools").setup({
+      --})
+    --end
+  --}
+
+  vim.api.nvim_set_keymap('n', '<leader>rn', ':<CR>', {noremap = true, silent = true})
 
 
   -- ===================================================================
@@ -252,46 +397,22 @@ return require('packer').startup(function(use)
     config = function()
       require('copilot').setup({
         panel = {
-          enabled = true,
-          auto_refresh = false,
-          keymap = {
-            jump_prev = "[[",
-            jump_next = "]]",
-            accept = "<CR>",
-            refresh = "gr",
-            open = "<M-CR>"
-          },
-          layout = {
-            position = "bottom", -- | top | left | right
-            ratio = 0.4
-          },
+          enabled = false,
         },
         suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
-          keymap = {
-            accept = "<C-space>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-j>",
-            prev = "<M-k>",
-            dismiss = "<C-m>",
-          },
+          enabled = false,
         },
-        filetypes = {
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ["."] = false,
-        },
-        copilot_node_command = 'node', -- Node.js version must be > 16.x
-        server_opts_overrides = {},
+       copilot_node_command = 'node', -- Node.js version must be > 16.x
       })
     end,
+  }
+
+  use {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function ()
+      require("copilot_cmp").setup()
+    end
   }
 
   use {
@@ -328,64 +449,7 @@ return require('packer').startup(function(use)
   vim.o.updatetime = 300
   vim.o.signcolumn = 'number'
 
-  -- ===================================================================
-  -- CoC tab completion
-  -- ===================================================================
-  -- Make <CR> auto-select the first completion item and notify coc.nvim to
-  -- format on enter, <cr> could be remapped by other vim plugin
-  vim.api.nvim_set_keymap('i', '<cr>', 'pumvisible() ? coc#_select_confirm() : "<CR>"', {noremap = false, expr = true})
-  -- use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-  vim.api.nvim_set_keymap('n', '<C-m>', '<Plug>(coc-diagnostic-next)', {})
-  vim.api.nvim_set_keymap('n', '<C-n>', '<Plug>(coc-diagnostic-prev)', {})
 
-  -- GoTo code navigation.
-  --nmap <silent> gd <Plug>(coc-definition)
-  vim.api.nvim_set_keymap('n', 'gd', '<Plug>(coc-definition)', {})
-  --nmap <silent> gy <Plug>(coc-type-definition)
-  vim.api.nvim_set_keymap('n', 'gy', '<Plug>(coc-type-definition)', {})
-  --nmap <silent> gi <Plug>(coc-implementation)
-  vim.api.nvim_set_keymap('n', 'gi', '<Plug>(coc-implementation)', {})
-  --nmap <silent> gr <Plug>(coc-references)
-  vim.api.nvim_set_keymap('n', 'gr', '<Plug>(coc-references)', {})
-
-  function _G.show_docs()
-      local cw = vim.fn.expand('<cword>')
-      if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
-          vim.api.nvim_command('h ' .. cw)
-      elseif vim.api.nvim_eval('coc#rpc#ready()') then
-          vim.fn.CocActionAsync('doHover')
-      else
-          vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
-      end
-  end
-  vim.api.nvim_set_keymap("n", "K", '<CMD>lua _G.show_docs()<CR>', {silent = true})
-
-  -- Highlight the symbol and its references when holding the cursor.
-  --autocmd CursorHold * silent call CocActionAsync('highlight')
-  vim.cmd('autocmd CursorHold * silent call CocActionAsync("highlight")')
-  -- Symbol renaming.
-  vim.api.nvim_set_keymap('n', '<leader>rn', '<Plug>(coc-rename)', {})
-  -- Formatting selected code.
-  vim.api.nvim_set_keymap('x', '<leader>F', '<Plug>(coc-format-selected)', {})
-  vim.api.nvim_set_keymap('n', '<leader>F', '<Plug>(coc-format-selected)', {})
-  -- fix-it -- show preview window of fixable things and choose fix
-  vim.api.nvim_set_keymap('n', 'fi', '<Plug>(coc-codeaction)', {})
-  -- fix eslint (also any other fixable things. Mostly used for React hook dependencies)
-  vim.api.nvim_set_keymap('n', 'fe', '<Plug>(coc-fix-current)', {})
-  -- fix eslint (all)
-  vim.api.nvim_set_keymap('n', 'fE', ':<C-u>CocCommand eslint.executeAutofix<cr>', {})
-  -- Show all diagnostics.
-  vim.api.nvim_set_keymap('n', '<leader>d', ':<C-u>CocList diagnostics<cr>', {noremap = true})
-  -- Manage extensions.
-  vim.api.nvim_set_keymap('n', '<leader>e', ':<C-u>CocList extensions<cr>', {noremap = true})
-  -- Show commands.
-  vim.api.nvim_set_keymap('n', '<leader>c', ':<C-u>CocList commands<cr>', {noremap = true})
-  -- Find symbol of current document.
-  vim.api.nvim_set_keymap('n', '<leader>o', ':<C-u>CocList outline<cr>', {noremap = true})
-  -- Search workspace symbols.
-  vim.api.nvim_set_keymap('n', '<leader>z', ':<C-u>CocList -I symbols<cr>', {noremap = true})
-  -- Resume latest coc list.
-  vim.api.nvim_set_keymap('n', '<leader>r', ':<C-u>CocListResume<CR>', {noremap = true})
   -- ==============================================================================
   -- Look and feel
   -- ==============================================================================
