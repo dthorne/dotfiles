@@ -241,9 +241,12 @@ return require('packer').startup(function(use)
     javascriptreact = 'jsxRegion',
   }
 
-  --use { 'HerringtonDarkholme/yats'}
   use { 'Shougo/vimproc.vim', run = 'make' }
   use { 'mattn/emmet-vim' }
+
+  -- ===================================================================
+  -- Language Server Protocol
+  -- ===================================================================
 
   use { 'hrsh7th/cmp-nvim-lsp' }
   use { 'hrsh7th/cmp-buffer' }
@@ -255,6 +258,12 @@ return require('packer').startup(function(use)
     config = function() 
       local cmp = require('cmp');
       require('cmp').setup({
+        window = {
+          --completion = cmp.config.window.bordered(),
+        },
+        completion = {
+          completeopt = 'menu,menuone,noinsert,popup',
+        },
         snippet = {
           expand = function(args)
             vim.snippet.expand(args.body)
@@ -267,19 +276,7 @@ return require('packer').startup(function(use)
           ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
           ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           ['<CR>'] = cmp.mapping.confirm({ select = false }),
-          --['<Tab>'] = { -- see GH-880, GH-897
-            --i = function(fallback) -- see GH-231, GH-286
-              --if cmp.visible() then cmp.select_next_item()
-              --elseif has_words_before() then cmp.complete()
-              --else fallback() end
-            --end,
-          --},
-          --['<S-Tab>'] = {
-            --i = function(fallback)
-              --if cmp.visible() then cmp.select_prev_item()
-              --else fallback() end
-            --end,
-          --},
+          ['<C-space>'] = cmp.mapping.complete(),
         },
         sources = {
           { name = 'nvim_lsp' },
@@ -314,14 +311,12 @@ return require('packer').startup(function(use)
       })
       -- `/` cmdline setup.
       cmp.setup.cmdline('/', {
-        mapping = cmp.mapping.preset.cmdline(),
         sources = {
           { name = 'buffer' }
         }
       })
       -- `:` cmdline setup.
       cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = 'path' }
         }, {
