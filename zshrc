@@ -87,6 +87,7 @@ esac
 
 # custom commands
 alias gg="lazygit"
+alias ducks='du -cksh * | sort -hr | head -n 15'
 
 #docker
 alias dockerstop="docker stop $(docker ps -a -q)"

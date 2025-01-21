@@ -5,3 +5,4 @@ gh/**
 Cypress/**
 github-copilot
 nvim/plugin/packer_compiled.lua
+rclone
