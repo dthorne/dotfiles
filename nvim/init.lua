@@ -8,7 +8,7 @@
 vim.g.mapleader = ' '
 vim.api.nvim_set_keymap('n', '<space>', '<nop>', {noremap = true, silent = true})
 -- Esc on jj  
-vim.api.nvim_set_keymap('i', 'jj', '<esc>:w<CR>', {})
+vim.api.nvim_set_keymap('i', 'jj', '<esc><esc>:w<CR>', {})
 -- Stop search highlighting
 vim.api.nvim_set_keymap('n', '<leader>h', ':noh<cr>', {noremap = true, silent = true})
 -- Replace visual selection
@@ -86,7 +86,7 @@ return require('packer').startup(function(use)
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require('mason-lspconfig').setup({
-        ensure_installation = { "vtsls" },
+        ensure_installation = { "vtsls", "eslint", "lua" },
         automatic_installation = true
       })
     end
@@ -186,7 +186,7 @@ return require('packer').startup(function(use)
     Unknown   = "?"
   }
 
-  use { 'junegunn/vim-peekaboo'  }             -- peekaboo                  - Shows the contents of the registers on a sidebar
+  use { 'junegunn/vim-peekaboo' }             -- peekaboo                  - Shows the contents of the registers on a sidebar
   vim.g.peekaboo_window = 'vertical botright 50new'
 
   use { 'kshenoy/vim-signature' }              -- signature                 - Show and navigate to marks m<letter> m<space> `]
@@ -248,21 +248,33 @@ return require('packer').startup(function(use)
   -- Language Server Protocol
   -- ===================================================================
 
-  use { 'hrsh7th/cmp-nvim-lsp' }
-  use { 'hrsh7th/cmp-buffer' }
-  use { 'hrsh7th/cmp-path' }
-  use { 'hrsh7th/cmp-cmdline' }
+  use {
+    'hrsh7th/cmp-nvim-lsp',
+    after = { 'nvim-cmp', 'nvim-lspconfig' },
+    config = function()
+    end
+  }
+  use {
+    'hrsh7th/cmp-buffer',
+    after = { 'nvim-cmp' },
+  }
+  use {
+    'hrsh7th/cmp-path',
+    after = { 'nvim-cmp' },
+  }
+  use {
+    'hrsh7th/cmp-cmdline',
+    after = { 'nvim-cmp' },
+  }
   use {
     'hrsh7th/nvim-cmp',
     after = { 'copilot-cmp' },
     config = function() 
       local cmp = require('cmp');
       require('cmp').setup({
+        preselect = cmp.PreselectMode.None,
         window = {
-          --completion = cmp.config.window.bordered(),
-        },
-        completion = {
-          completeopt = 'menu,menuone,noinsert,popup',
+          completion = cmp.config.window.bordered(),
         },
         snippet = {
           expand = function(args)
@@ -275,7 +287,17 @@ return require('packer').startup(function(use)
           ['<esc>'] = cmp.mapping.close({ select = false }),
           ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
           ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+          ['<CR>'] = cmp.mapping({
+            i = function(fallback)
+              if cmp.visible() and cmp.get_active_entry() then
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+              else
+                fallback()
+              end
+            end,
+            s = cmp.mapping.confirm({ select = true }),
+            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+          }),
           ['<C-space>'] = cmp.mapping.complete(),
         },
         sources = {
@@ -337,7 +359,7 @@ return require('packer').startup(function(use)
   use {
     'neovim/nvim-lspconfig',
     config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      --local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
       local function on_attach(client, bufnr)
         -- Set up buffer-local keymaps (vim.api.nvim_buf_set_keymap()), etc.
         local opts = { noremap = true, silent = true }
@@ -354,33 +376,22 @@ return require('packer').startup(function(use)
         vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "single" })<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "single" })<CR>', opts)
         -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-        vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>F", '<cmd>lua vim.lsp.buf.format()<CR>', opts)
+        vim.cmd [[ command! Format execute 'lua vim.lsp.buf.format()' ]]
+        vim.api.nvim_create_user_command('Format', 'lua vim.lsp.buf.format()', {bang = false})
       end
-      --require('lspconfig').angularls.setup{}
       require('lspconfig').vtsls.setup({
-        capabilities = capabilities,
+        --capabilities = capabilities,
         on_attach = on_attach
       })
-      --require('lspconfig').eslint.setup({
-        --on_attach
-      --})
+      require('lspconfig').eslint.setup({
+        on_attach
+      })
+      require('lspconfig').lua.setup({
+        on_attach
+      })
     end
   }
-
-  --use {
-    --"pmizio/typescript-tools.nvim",
-    --requires = {
-      --"nvim-lua/plenary.nvim",
-      --"neovim/nvim-lspconfig",
-    --},
-    --config = function()
-      --require("typescript-tools").setup({
-      --})
-    --end
-  --}
-
-  vim.api.nvim_set_keymap('n', '<leader>rn', ':<CR>', {noremap = true, silent = true})
-
 
   -- ===================================================================
   -- AI Tooling
@@ -496,11 +507,12 @@ return require('packer').startup(function(use)
   vim.cmd('autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact')
   vim.cmd('autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart')
   vim.cmd('autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear')
+
   -- Italics
-  vim.cmd('let &t_ZH="e[3m"')
-  vim.cmd('let &t_ZR="e[23m"')
-  vim.cmd('set t_ZH=^[[3m')
-  vim.cmd('set t_ZR=^[[23m')
+  --vim.cmd('let &t_ZH="e[3m"')
+  --vim.cmd('let &t_ZR="e[23m"')
+  --vim.cmd('set t_ZH=^[[3m')
+  --vim.cmd('set t_ZR=^[[23m')
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if packer_bootstrap then
