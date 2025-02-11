@@ -1,18 +1,13 @@
 -- ===================================================================
 -- Dewey McNeill - vim settings
 -- ===================================================================
-
+--
+-- Check if running in VSCode Neovim extension
+local is_vscode = vim.g.vscode == 1 
 -- ===================================================================
 -- Key Mappings 
 -- ===================================================================
-vim.g.mapleader = ' '
-vim.api.nvim_set_keymap('n', '<space>', '<nop>', {noremap = true, silent = true})
--- Esc on jj  
-vim.api.nvim_set_keymap('i', 'jj', '<esc><esc>:w<CR>', {})
--- Stop search highlighting
-vim.api.nvim_set_keymap('n', '<leader>h', ':noh<cr>', {noremap = true, silent = true})
--- Replace visual selection
-vim.api.nvim_set_keymap('v', '<C-r>', '"hy:%s/<C-r>h//g<left><left>', {noremap = true})
+require('mappings');
 
 -- Config management
 vim.api.nvim_create_user_command('Vimconfig', 'e $MYVIMRC', {bang = false})
@@ -25,36 +20,10 @@ function ReloadVimrc()
   vim.fn.setpos('.', save_cursor)
 end
 vim.api.nvim_create_user_command('ReloadVimrc', 'lua ReloadVimrc()', {bang = false})
-
 -- ===================================================================
 -- Editor settings
 -- ===================================================================
-vim.opt.numberwidth = 4
-vim.opt.number = true
-vim.opt.mouse = 'a'
-vim.cmd('filetype plugin indent on')
-vim.cmd('syntax on')
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.ignorecase = true
-vim.opt.wildmenu = true
-vim.opt.smartcase = true
-vim.cmd('silent !mkdir ~/.swap-files > /dev/null 2>&1')
-vim.opt.swapfile = true
-vim.opt.dir = '~/.swap-files'
-
--- ===================================================================
--- Window Management
--- ===================================================================
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {noremap = true})
-
+require('set');
 
 -- ===================================================================
 -- PLUGINS (packer settings - Package Manager)
@@ -86,7 +55,7 @@ return require('packer').startup(function(use)
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require('mason-lspconfig').setup({
-        ensure_installation = { "vtsls", "eslint", "lua" },
+        ensure_installation = { "vtsls", "eslint", "lua", "angular-language-server" },
         automatic_installation = true
       })
     end
@@ -125,17 +94,6 @@ return require('packer').startup(function(use)
 	}
 
   vim.g.fzf_nvim_statusline = 0
-  vim.api.nvim_set_keymap('n', '<leader><space>', ':Files<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>f', ':Ag<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>a', ':Buffers<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>A', ':Windows<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>o', ':BTags<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>O', ':Tags<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('n', '<leader>?', ':History<CR>', {noremap = true, silent = true})
-  --vim.api.nvim_create_user_command('Ag', 'call fzf#vim#ag(<q-args>, {\'options\': \'--delimiter : --nth 4..\'}), <bang>0', {bang = true, nargs = '*'})
-
-  vim.api.nvim_set_keymap('i', '<C-x><C-f>', '<plug>(fzf-complete-file-ag)', {})
-  vim.api.nvim_set_keymap('i', '<C-x><C-l>', '<plug>(fzf-complete-line)', {})
 
   use { 
     "luukvbaal/nnn.nvim",
@@ -154,8 +112,6 @@ return require('packer').startup(function(use)
     end
   }
 
-  vim.api.nvim_set_keymap('n', '<leader>n', ':NnnPicker<CR>', {noremap = true, silent = true})
-
   -- ===================================================================
   -- File Sidebar (NERDTree)
   -- ===================================================================
@@ -165,12 +121,7 @@ return require('packer').startup(function(use)
     ['.*spec.*\\.ts$'] = 'ﬆ'
   }
 
-  use { 'preservim/nerdtree'} -- nerdtree                  - File system browser (,e)
-  --map <C-p> :ToggleNERDTree<CR>
-  vim.api.nvim_set_keymap('n', '<C-p>', ':NERDTreeToggle<CR>', {noremap = true, silent = true})
-  --map <leader>P :NERDTreeFind<CR>
-  vim.api.nvim_set_keymap('n', '<leader>P', ':NERDTreeFind<CR>', {noremap = true, silent = true})
-  --let NERDTreeShowHidden=1
+  use { 'preservim/nerdtree' } -- nerdtree                  - File system browser (,e)
   vim.g.NERDTreeShowHidden = 1
   use { 'Xuyuanp/nerdtree-git-plugin'}
   vim.g.NERDTreeGitStatusIndicatorMapCustom = {
@@ -191,8 +142,6 @@ return require('packer').startup(function(use)
 
   use { 'kshenoy/vim-signature' }              -- signature                 - Show and navigate to marks m<letter> m<space> `]
   use { 'liuchengxu/vista.vim' }               -- vista                     - Code outline
-  --use { 'preservim/tagbar'                   -- tagbar                    - Show tags list (vars, funcs, etc.) (,t)
-  --use { 'pseewald/nerdtree-tagbar-combined'  -- nerdtree-tagbar-combined  - Opens tagbar and NERDTree in one vertical split window
 
   --
   -- Git
@@ -201,7 +150,6 @@ return require('packer').startup(function(use)
   use { 'tpope/vim-rhubarb'} -- rhubarb                   - Fugitive-companion to interact with github
   use { 'junkblocker/git-time-lapse' } -- git-time-lapse             - Git time lapse
   use { 'airblade/vim-gitgutter'}
-  vim.api.nvim_set_keymap('n', '<leader>gs', ':Git ', {noremap = true, silent = true})
 
   use({
       "kdheepak/lazygit.nvim",
@@ -210,10 +158,6 @@ return require('packer').startup(function(use)
           "nvim-lua/plenary.nvim",
       },
   })
-
-  vim.api.nvim_set_keymap('n', '<leader>gg', ':LazyGit<CR>', {noremap = true, silent = true})
-
-
 
   --
   -- Commands
@@ -296,7 +240,7 @@ return require('packer').startup(function(use)
               end
             end,
             s = cmp.mapping.confirm({ select = true }),
-            c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+            c = cmp.config.disable,
           }),
           ['<C-space>'] = cmp.mapping.complete(),
         },
@@ -333,15 +277,18 @@ return require('packer').startup(function(use)
       })
       -- `/` cmdline setup.
       cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
         sources = {
           { name = 'buffer' }
         }
       })
       -- `:` cmdline setup.
       cmp.setup.cmdline(':', {
+        preselect = cmp.PreselectMode.None,
+        mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = 'path' }
-        }, {
+        },{
           {
             name = 'cmdline',
             option = {
@@ -381,6 +328,10 @@ return require('packer').startup(function(use)
         vim.api.nvim_create_user_command('Format', 'lua vim.lsp.buf.format()', {bang = false})
       end
       require('lspconfig').vtsls.setup({
+        --capabilities = capabilities,
+        on_attach = on_attach
+      })
+      require('lspconfig').angularls.setup({
         --capabilities = capabilities,
         on_attach = on_attach
       })
@@ -437,9 +388,6 @@ return require('packer').startup(function(use)
     end,
   }
 
-  vim.api.nvim_set_keymap('n', '<leader>ai', ':CopilotChatToggle<CR>', {noremap = true, silent = true})
-  vim.api.nvim_set_keymap('v', '<leader>ai', ':CopilotChatExplain<CR>', {noremap = true, silent = true})
-
   -- ===================================================================
   -- Misc Tools
   -- ===================================================================
@@ -451,9 +399,6 @@ return require('packer').startup(function(use)
   -- ===================================================================
   -- More NVIM settings
   -- ===================================================================
-  vim.o.cmdheight = 3
-  vim.o.updatetime = 300
-  vim.o.signcolumn = 'number'
 
 
   -- ==============================================================================
@@ -491,23 +436,23 @@ return require('packer').startup(function(use)
   --
   -- Vim Extensions
   --
-  use { 'xolox/vim-misc' }
-  use { 'xolox/vim-session' }
+  if not is_vscode
+    use { 'xolox/vim-misc' }
+    use { 'xolox/vim-session' }
 
-  --vim.cmd('colorscheme codedark')
-  vim.cmd('highlight comment cterm=italic gui=italic')
-  vim.cmd('highlight keyword cterm=italic gui=italic')
-  vim.cmd('highlight identifier cterm=italic gui=italic')
-  vim.cmd('highlight special cterm=italic gui=italic')
-  vim.cmd('highlight type cterm=italic gui=italic')
-  vim.cmd('set noswapfile')
-  -- to get rid of thing like --INSERT--
-
-  vim.cmd('set noshowmode')
-  vim.cmd('autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact')
-  vim.cmd('autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart')
-  vim.cmd('autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear')
-
+    --vim.cmd('colorscheme codedark')
+    vim.cmd('highlight comment cterm=italic gui=italic')
+    vim.cmd('highlight keyword cterm=italic gui=italic')
+    vim.cmd('highlight identifier cterm=italic gui=italic')
+    vim.cmd('highlight special cterm=italic gui=italic')
+    vim.cmd('highlight type cterm=italic gui=italic')
+    vim.cmd('set noswapfile')
+    -- to get rid of thing like --INSERT--
+    vim.cmd('set noshowmode')
+    vim.cmd('autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact')
+    vim.cmd('autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart')
+    vim.cmd('autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear')
+end
   -- Italics
   --vim.cmd('let &t_ZH="e[3m"')
   --vim.cmd('let &t_ZR="e[23m"')
