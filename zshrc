@@ -1,7 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 export ZSHRC=~/.zshrc
-# export FZF_DEFAULT_COMMAND='rg --files --follow --no-ignore-vcs --hidden -g "!{node_modules/*,.git/*}"'
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 
 export CHOKIDAR_USEPOLLING=true
@@ -19,13 +18,12 @@ export NVM_LAZY_LOAD=true
 
 export PATH="$HOME/src/flutter/bin:$PATH"
 
-#export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 export DISPLAY=$(grep -m 1 nameserver /etc/resolv.conf | awk '{print $2}'):0.0
-#export DISPLAY=localhost:0
 export LIBGL_ALWAYS_INDIRECT=1
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
+alias nvim="$HOME/bin/nvim-0.9.5/bin/nvim"
 
 #antigen setup
 source $HOME/.oh-my-zsh/plugins/antigen.zsh
@@ -88,6 +86,8 @@ esac
 # custom commands
 alias gg="lazygit"
 alias ducks='du -cksh * | sort -hr | head -n 15'
+alias code="code-insiders"
+alias nvim11="~/bin/nvim-macos-11/bin/nvim"
 
 #docker
 alias dockerstop="docker stop $(docker ps -a -q)"
