@@ -33,8 +33,11 @@ return {
     build = "make",
     opts = {
       provider = "copilot",
-      behavior = {
-        enable_cursor_planning_mod = true,
+      copilot = {
+        model = "claude-3.7-sonnet"
+      },
+      behaviour = {
+        enable_cursor_planning_mode = true,
         enable_claude_text_edit_tool_mode = true,
       },
     },

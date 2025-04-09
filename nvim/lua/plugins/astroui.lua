@@ -21,8 +21,6 @@ return {
       LSPLoading8 = "⠧",
       LSPLoading9 = "⠇",
       LSPLoading10 = "⠏",
-      FoldOpen = "▾",
-      FoldClosed = "▸",
     },
   },
 }

@@ -8,18 +8,13 @@ return {
     opts = function(_, opts)
       -- customize the dashboard header
       opts.section.header.val = {
-        " ███████╗██╗  ██╗██╗   ██╗ ██████╗██╗   ██╗██╗ ██████╗██╗  ██╗",
-        " ██╔════╝██║  ██║██║   ██║██╔════╝██║   ██║██║██╔════╝██║ ██╔╝",
-        " ███████╗███████║██║   ██║██║     ██║   ██║██║██║     █████╔╝ ",
-        " ╚════██║██╔══██║██║   ██║██║     ██║   ██║██║██║     ██╔═██╗ ",
-        " ███████║██║  ██║╚██████╔╝╚██████╗╚██████╔╝██║╚██████╗██║  ██╗",
-        " ╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝╚═╝  ╚═╝",
+        " ███████╗██╗  ██╗██╗   ██╗ ██████╗██╗   ██╗██╗ ██████╗ ██╗    ██╗",
+        " ██╔════╝██║  ██║██║   ██║██╔════╝██║   ██║██║██╔════╝██╔╝   ██╔╝",
+        " ███████╗███████║██║   ██║██║     ██║   ██║██║██║     █╔╝   ██╔╝ ",
+        " ██║     ██╔══██║██║   ██║██║     ██║   ██║██║██║     ██╗   ═██╗ ",
+        " ███████║██║  ██║╚██████╔╝╚██████╗╚██████╔╝██║╚██████╗ ██╗    ██╗",
+        " ╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝ ╚═╝    ╚═╝",
         " ",
-        "    ███████╗██╗  ██╗██╗   ██╗ ██████╗██╗   ██╗██╗ ██████╗██╗  ██╗",
-        "    ██╔════╝██║  ██║██║   ██║██╔════╝██║   ██║██║██╔════╝██║ ██╔╝",
-        "    ███████╗███████║██║   ██║██║     ██║   ██║██║██║     █████╔╝ ",
-        "    ╚════██║██╔══██║██║   ██║██║     ██║   ██║██║██║     ██╔═██╗ ",
-        "    ███████║██║  ██║╚██████╔╝╚██████╗╚██████╔╝██║╚██████╗██║  ██╗",
       }
       return opts
     end,
@@ -31,7 +26,14 @@ return {
         mappings = {
           i = {
             j = {
+              k = false,
               j = "<Esc>:w<cr>",
+            },
+          },
+          t = {
+            j = {
+              k = false,
+              j = false,
             },
           },
         },
@@ -40,17 +42,38 @@ return {
   },
   -- Git Plugins
   { "junkblocker/git-time-lapse" },
-
-  -- Theme and UI
   {
-    "baliestri/aura-theme",
-    lazy = false,
-    priority = 1000,
-    config = function(plugin)
-      vim.opt.rtp:append(plugin.dir .. "/packages/neovim")
-      vim.cmd [[colorscheme aura-soft-dark]]
+    "kdheepak/lazygit.nvim",
+    cmd = "LazyGit",
+    setup = function()
+      require("lazygit").setup {
+        auto_enable = true,
+      }
+      require('which-key').add({
+        {"<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit"},
+      })
     end,
   },
+  -- Theme and UI
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = true,
+        },
+      },
+    },
+  },
+  -- {
+  --   "baliestri/aura-theme",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function(plugin)
+  --     vim.opt.rtp:append(plugin.dir .. "/packages/neovim")
+  --     vim.cmd [[colorscheme aura-soft-dark]]
+  --   end,
+  -- },
   { "jimsei/winresizer" },
   {
     "Wansmer/treesj",
@@ -67,6 +90,7 @@ return {
         { "<leader>sj", '<cmd>lua require("treesj").join()<cr>', desc = "Join" },
       }
     end,
+    cond = true,
   },
   -- Commands
   {
@@ -74,13 +98,11 @@ return {
     config = function() require("leap").add_default_mappings() end,
   },
   { "henrik/vim-indexed-search" }, -- Show N out of M in searches
-  { "scrooloose/nerdcommenter" }, -- comment/uncomment source lines
 
-  { "tpope/vim-repeat" }, -- Repeats commands, including macros
-  { "tpope/vim-speeddating" }, -- use Ctrl+A and Ctrl+X for Date, Time, Roman Number and Ordinal Numbers
-  { "tpope/vim-unimpaired" }, -- mappings for pairs
+  { "tpope/vim-repeat", cond = true }, -- Repeats commands, including macros
+  { "tpope/vim-speeddating", cond = true }, -- use Ctrl+A and Ctrl+X for Date, Time, Roman Number and Ordinal Numbers
+  { "tpope/vim-unimpaired", cond = true }, -- mappings for pairs
 
-  { "tpope/vim-abolish" }, -- Change case (crs: snake_case, crm: MixedCase, crc: camelCase, cru: UPPER_CASE)
-  { "tpope/vim-surround" }, -- Add surround modifier to vim (s noun)
-  -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
+  { "tpope/vim-abolish", cond = true }, -- Change case (crs: snake_case, crm: MixedCase, crc: camelCase, cru: UPPER_CASE)
+  { "tpope/vim-surround", cond = true }, -- Add surround modifier to vim (s noun)
 }

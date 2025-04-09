@@ -6,3 +6,5 @@ Cypress/**
 github-copilot
 nvim/plugin/packer_compiled.lua
 rclone
+fontforge/plugin/plugin_config.ini
+nvim/.luarc.json

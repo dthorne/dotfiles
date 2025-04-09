@@ -23,7 +23,7 @@ export LIBGL_ALWAYS_INDIRECT=1
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
-alias nvim="$HOME/bin/nvim-0.9.5/bin/nvim"
+alias nvim="$HOME/bin/nvim-11/bin/nvim"
 
 #antigen setup
 source $HOME/.oh-my-zsh/plugins/antigen.zsh
@@ -87,7 +87,7 @@ esac
 alias gg="lazygit"
 alias ducks='du -cksh * | sort -hr | head -n 15'
 alias code="code-insiders"
-alias nvim11="~/bin/nvim-macos-11/bin/nvim"
+alias nvim11="~/bin/nvim-11/bin/nvim"
 
 #docker
 alias dockerstop="docker stop $(docker ps -a -q)"
