@@ -1,0 +1,26 @@
+[terminal.shell]
+program = "/bin/zsh"
+args = [ "-l", "-c", "tmux attach -t 'λ' || tmux new -s 'λ'" ]
+[window] 
+  option_as_alt = "Both"
+[window.padding]
+  x = 4
+  y = 4
+[font]
+  size = 16.0
+[font.normal]
+  family = "DankMono Nerd Font Mono"
+  style = "Regular"
+[font.bold]
+  family = "DankMono Nerd Font Mono"
+  style = "Bold"
+[font.italic]
+  family = "DankMono Nerd Font Mono"
+  style = "Italic" 
+[font.bold_italic]
+  family = "DankMono Nerd Font Mono"
+  style = "Bold Italic"
+[keyboard]
+bindings = [
+  { key = "F17", chars = "\u001b[15;2~" }
+]

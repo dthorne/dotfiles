@@ -44,7 +44,7 @@
   sync = "!f() { git checkout --quiet --detach && git fetch ${1-origin} ${2-master}:${2-master} && git checkout --quiet -; }; f"
   urebase = "!f() { git worktree add ~/tmp-rebase-worktree $2 && cd ~/tmp-rebase-worktree && git rebase $1 $2 && cd - && rm -rf ~/tmp-rebase-worktree && git worktree prune; }; f"
 [core]
-  editor = nvim 
+	editor = /Users/dmcneill/bin/nvim-11/bin/nvim
   commentchar = !
 # define command which will be used when "nvim" is set as a merge tool
 [mergetool "nvim"]
@@ -75,3 +75,8 @@
 	prune = true
 [commit]
 	template = ~/.commit-template
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
