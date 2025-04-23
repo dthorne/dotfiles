@@ -12,10 +12,6 @@ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 export XDG_CONFIG_HOME=~/dotfiles
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-export NVM_LAZY_LOAD=true
-
 export PATH="$HOME/src/flutter/bin:$PATH"
 
 export DISPLAY=$(grep -m 1 nameserver /etc/resolv.conf | awk '{print $2}'):0.0
@@ -32,7 +28,7 @@ antigen use oh-my-zsh
 
 antigen bundle git
 antigen bundle npm
-antigen bundle nvm
+# antigen bundle nvm
 antigen bundle kubectl
 antigen bundle compleat
 antigen bundle jira
@@ -44,8 +40,8 @@ antigen bundle zsh-users/zsh-history-substring-search ./zsh-history-substring-se
 
 antigen bundle kubectl
 
-antigen bundle lukechilds/zsh-nvm
-antigen bundle Sparragus/zsh-auto-nvm-use
+# antigen bundle lukechilds/zsh-nvm
+# antigen bundle Sparragus/zsh-auto-nvm-use
 
 antigen theme https://github.com/denysdovhan/spaceship-prompt spaceship
 
@@ -70,9 +66,6 @@ function fn_git_checkout() {
     git checkout $branch
 }
 alias gco='fn_git_checkout'
-
-eval 
-TWILIO_AC_ZSH_SETUP_PATH=/home/dewey/.twilio-cli/autocomplete/zsh_setup && test -f $TWILIO_AC_ZSH_SETUP_PATH && source $TWILIO_AC_ZSH_SETUP_PATH; # twilio autocomplete setup
 
 # pnpm
 export PNPM_HOME="/home/dewey/.local/share/pnpm"
@@ -144,3 +137,9 @@ n ()
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+
+# fnm
+FNM_PATH="/Users/dmcneill/Library/Application Support/fnm"
+export PATH="/Users/dmcneill/Library/Application Support/fnm:$PATH"
+alias nvm=fnm
+eval "`fnm env --use-on-cd --shell zsh`"

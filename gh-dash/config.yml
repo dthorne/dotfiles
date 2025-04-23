@@ -67,7 +67,13 @@ defaults:
 keybindings:
   universal: []
   issues: []
-  prs: []
+  prs:
+    - key: C
+      command: >
+        tmux split-window -h -c {{.RepoPath}} '
+          gh pr checkout {{.PrNumber}} &&
+          nvim -c ":Octo pr edit {{.PrNumber}}"
+        '
   branches: []
 repoPaths:
   cricut/*: ~/src/*
