@@ -89,12 +89,8 @@ return {
           ["zR"] = "<CMD>call VSCodeNotify('editor.unfoldAll')<CR>",
           -- AI functionality keybindings (Copilot/GitHub CoPilot Chat)
           -- Similar to avante.nvim keybindings
-          ["<Leader>aa"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.explain')<CR>",
-          ["<Leader>ai"] = "<CMD>call VSCodeNotify('github.copilot.chat.openPanel')<CR>",
-          ["<Leader>ag"] = "<CMD>call VSCodeNotify('github.copilot.chat.startSession')<CR>",
-          ["<Leader>as"] = "<CMD>call VSCodeNotify('github.copilot.showSuggestionPanel')<CR>",
-          ["<Leader>ae"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.generateInline')<CR>",
-          ["<Leader>af"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.fix')<CR>",
+          ["<Leader>aa"] = "<CMD>call VSCodeNotify('editor.action.inlineSuggest.trigger')<CR>",
+          ["<Leader>af"] = "<CMD>call VSCodeNotify('workbench.action.quickchat.toggle')<CR>",
         },
         v = {
           -- Apply AI actions to visual selections
