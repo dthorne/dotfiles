@@ -144,3 +144,10 @@ FNM_PATH="/Users/dmcneill/Library/Application Support/fnm"
 export PATH="/Users/dmcneill/Library/Application Support/fnm:$PATH"
 alias nvm=fnm
 eval "`fnm env --use-on-cd --shell zsh`"
+
+# fnm
+FNM_PATH="/home/dewey/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/dewey/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
