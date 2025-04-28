@@ -7,6 +7,8 @@ export CHOKIDAR_USEPOLLING=true
 export ANDROID_HOME=~/Android/Sdk/
 export ANDROID_SDK_ROOT=~/Android/Sdk/
 export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/bin/nvim-11/bin:$PATH"
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
@@ -19,7 +21,6 @@ export LIBGL_ALWAYS_INDIRECT=1
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"
-alias nvim="$HOME/bin/nvim-11/bin/nvim"
 
 #antigen setup
 source $HOME/.oh-my-zsh/plugins/antigen.zsh
