@@ -2,14 +2,11 @@ prSections:
 - title: Platform Team PRs
   filters: is:pr is:open author:ibrahimbadivi author:SamuASantana author:DenysPoznukhovNiX author:dthorne author:ashevchuk-ecw author:FloLys
   type: null
-- title: My Pull Requests
-  filters: is:open author:@me
-  type: null
 - title: Needs My Review
   filters: is:open review-requested:@me
   type: null
 - title: Involved
-  filters: is:open involves:@me -author:@me
+  filters: is:open involves:@me
   type: null
 issuesSections:
 - title: My Issues
@@ -24,7 +21,7 @@ repo:
 defaults:
   preview:
     open: true
-    width: 50
+    width: 100
   prsLimit: 20
   prApproveComment: LGTM
   issuesLimit: 20
@@ -68,15 +65,15 @@ keybindings:
   universal: []
   issues: []
   prs:
-    - key: C
-      command: >
-        tmux split-window -h -c {{.RepoPath}} '
-          gh pr checkout {{.PrNumber}} &&
-          nvim -c ":Octo pr edit {{.PrNumber}}"
-        '
+    - command: |
+        tmux split-window -h -c {{.RepoPath}} 'zsh -i -c "gh pr checkout {{.PrNumber}} && nvim -c \":Octo pr edit {{.PrNumber}}\""'
+      key: C
+    - command: |
+        tmux split-window -h 'zsh -i -c "gh repo clone {{.RepoName}} /Users/dmcneill/src/{{.RepoName}}"'
+      key: V
   branches: []
 repoPaths:
-  cricut/*: ~/src/*
+  cricut/*: ~/src/cricut/*
 theme:
   ui:
     sectionsShowCount: true

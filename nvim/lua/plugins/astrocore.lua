@@ -51,6 +51,13 @@ return {
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
 
+        -- avante
+        ["<leader>a"] = { desc = "Avante" },
+
+        -- telescope
+        ['<leader>ff'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>" , desc = "Find files"},
+        ['<leader>fF'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '-g', '!.git' }})<cr>" , desc = "Find files"},
+
         -- mappings seen under group name "Buffer"
         ["<Leader>bd"] = {
           function()

@@ -94,10 +94,7 @@ return {
         },
         v = {
           -- Apply AI actions to visual selections
-          ["<Leader>aa"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.explain')<CR>",
-          ["<Leader>ae"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.generateInline')<CR>",
-          ["<Leader>af"] = "<CMD>call VSCodeNotify('github.copilot.interactiveEditor.fix')<CR>",
-          ["<Leader>at"] = "<CMD>call VSCodeNotify('github.copilot.chat.askAppendSelectedToEditor')<CR>",
+          ["<Leader>ae"] = "<CMD>call VSCodeNotify('github.copilot.explain')<CR>",
         },
       },
     },
