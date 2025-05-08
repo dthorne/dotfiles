@@ -6,5 +6,6 @@
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.recipes.vscode" },
+  { import = "astrocommunity.colorscheme.catpuccin" },
   -- import/override with your plugins folder
 }

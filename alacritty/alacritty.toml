@@ -25,5 +25,6 @@ bindings = [
   { key = "F17", chars = "\u001b[15;2~" },
   { key = "c", mods = "Command", action = "Copy" },
   { key = "v", mods = "Command", action = "Paste" },
-  { key = "c", mods = "Control", chars = "\u0003" },
+  { key = "+", mods = "Command|Shift", action = "IncreaseFontSize" },
+  { key = "-", mods = "Command|Shift", action = "DecreaseFontSize" },
 ]
