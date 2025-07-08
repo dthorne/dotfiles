@@ -11,6 +11,7 @@ return {
       "json",
       "yaml",
       "markdown",
+      "markdown_inline"
     },
   },
 }

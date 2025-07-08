@@ -24,7 +24,7 @@ return {
       ensure_installed = {
         "stylua",
         "prettier", -- Formatter for TypeScript, JavaScript, HTML, CSS, etc.
-        "eslint_d", -- Linter for TypeScript and JavaScript
+        -- "eslint_d", -- Linter for TypeScript and JavaScript
         -- add more arguments for adding more null-ls sources
       },
     },

@@ -38,6 +38,7 @@ return {
           ["<Leader>fo"] = "<CMD>call VSCodeNotify('workbench.action.recents')<CR>",
           -- File explorer toggle
           ["<Leader>e"] = "<CMD>call VSCodeNotify('workbench.action.toggleSidebarVisibility')<CR>",
+          ["<Leader>E"] = "<CMD>call VSCodeNotify('workbench.panel.chat')<CR>",
           -- Go to definition (matches common IDE functionality)
           ["gd"] = "<CMD>call VSCodeNotify('editor.action.revealDefinition')<CR>",
           -- Show references
@@ -90,11 +91,12 @@ return {
           -- AI functionality keybindings (Copilot/GitHub CoPilot Chat)
           -- Similar to avante.nvim keybindings
           ["<Leader>aa"] = "<CMD>call VSCodeNotify('editor.action.inlineSuggest.trigger')<CR>",
-          ["<Leader>af"] = "<CMD>call VSCodeNotify('workbench.action.quickchat.toggle')<CR>",
+          ["<Leader>ae"] = "<CMD>call VSCodeNotify('workbench.action.quickchat.toggle')<CR>",
         },
         v = {
           -- Apply AI actions to visual selections
-          ["<Leader>ae"] = "<CMD>call VSCodeNotify('github.copilot.explain')<CR>",
+          ["<Leader>aa"] = "<CMD>call VSCodeNotify('github.copilot.explain')<CR>",
+          ["<Leader>ae"] = "<CMD>call VSCodeNotify('workbench.action.quickchat.toggle')<CR>",
         },
       },
     },

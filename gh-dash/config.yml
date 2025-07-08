@@ -1,18 +1,11 @@
 prSections:
 - title: Platform Team PRs
-  filters: is:pr is:open author:ibrahimbadivi author:SamuASantana author:DenysPoznukhovNiX author:dthorne author:ashevchuk-ecw author:FloLys
+  filters: is:pr is:open -is:draft author:ibrahimbadivi author:SamuASantana author:DenysPoznukhovNiX author:dthorne author:ashevchuk-ecw author:FloLys author:rgowdacricut -reviewed-by:@me
   type: null
 - title: Needs My Review
-  filters: is:open review-requested:@me
-  type: null
-- title: Involved
-  filters: is:open involves:@me
+  filters: is:open review-requested:@me -reviewed-by:@me 
   type: null
 issuesSections:
-- title: My Issues
-  filters: is:open author:@me
-- title: Assigned
-  filters: is:open assignee:@me
 - title: Involved
   filters: is:open involves:@me -author:@me
 repo:
@@ -21,9 +14,8 @@ repo:
 defaults:
   preview:
     open: true
-    width: 100
-  prsLimit: 20
-  prApproveComment: LGTM
+    width: 80
+  prsLimit: 30 
   issuesLimit: 20
   view: prs
   layout:
@@ -82,6 +74,6 @@ theme:
       compact: false
 pager:
   diff: ""
-confirmQuit: false
+confirmQuit: true
 showAuthorIcons: true
-smartFilteringAtLaunch: true
+smartFilteringAtLaunch: false

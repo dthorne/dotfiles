@@ -45,18 +45,19 @@ return {
       -- first key is the mode
       n = {
         -- second key is the lefthand side of the map
-        ["<space>gg"] = false,
+        ["<Leader>gg"] = false,
+        ["<Leader>o"] = false,
 
         -- navigate buffer tabs
         ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
         ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
 
         -- avante
-        ["<leader>a"] = { desc = "Avante" },
+        ["<Leader>a"] = { desc = "Avante" },
 
         -- telescope
-        ['<leader>ff'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>" , desc = "Find files"},
-        ['<leader>fF'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '-g', '!.git' }})<cr>" , desc = "Find files"},
+        ['<Leader>ff'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>" , desc = "Find All files"},
+        ['<Leader>fF'] = { "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '-g', '!.git' }})<cr>" , desc = "Find files"},
 
         -- mappings seen under group name "Buffer"
         ["<Leader>bd"] = {
